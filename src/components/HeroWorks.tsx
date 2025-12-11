@@ -4,6 +4,7 @@ import PhotoModal from './PhotoModal';
 import { ArrowRight } from 'lucide-react';
 import { useParallax } from '../hooks/useParallax';
 import { AnimatedWordFlip } from './ui/animated-word-flip';
+import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
 
 interface HeroWorksProps {
   theme: Theme;
@@ -190,6 +191,16 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const [gridColumns, setGridColumns] = useState(3);
   const [scrollY, setScrollY] = useState(0);
+  const heroHeadingAnimation = useTypographyAnimation<HTMLHeadingElement>({
+    intensity: 0.12,
+    letterSpacingRange: 0.05,
+    scrollStart: 0.1,
+    scrollEnd: 0.8,
+  });
+  const worksHeadingAnimation = useTypographyAnimation<HTMLHeadingElement>({
+    intensity: 0.08,
+    letterSpacingRange: 0.03,
+  });
 
   // Track scroll for continuous parallax effect
   useEffect(() => {
@@ -369,13 +380,17 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
           </p>
           
           <div className="overflow-visible">
-            <h2 className={`text-6xl md:text-9xl font-light serif leading-tight animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0 inline-flex items-baseline justify-center gap-2 ${
-              theme === Theme.VIBRANT 
-                ? '' 
+            <h2
+              ref={heroHeadingAnimation.ref}
+              style={heroHeadingAnimation.style}
+              className={`text-6xl md:text-9xl font-light serif leading-tight animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0 inline-flex items-baseline justify-center gap-2 ${
+              theme === Theme.VIBRANT
+                ? ''
                 : 'text-white'
-            }`}>
-              <AnimatedWordFlip 
-                words={theme === Theme.VIBRANT 
+            }`}
+            >
+              <AnimatedWordFlip
+                words={theme === Theme.VIBRANT
                   ? ['Capturing ', 'Freezing ', 'Framing ', 'Revealing ', 'Illuminating ', 'Preserving ']
                   : ['Capturing ', 'Freezing ', 'Framing ', 'Revealing ', 'Preserving ', 'Documenting ']
                 }
@@ -401,11 +416,15 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
       >
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
-            <h2 className={`text-4xl md:text-6xl serif ${
-              theme === Theme.VIBRANT 
-                ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent' 
+            <h2
+              ref={worksHeadingAnimation.ref}
+              style={worksHeadingAnimation.style}
+              className={`text-4xl md:text-6xl serif ${
+              theme === Theme.VIBRANT
+                ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent'
                 : 'text-white'
-            }`}>
+            }`}
+            >
               Selected Works
             </h2>
           </div>

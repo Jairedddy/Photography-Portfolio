@@ -3,6 +3,7 @@ import { Theme } from '../types';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CustomCursor from '../components/CustomCursor';
+import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
 
 interface ContactPageProps {
   theme: Theme;
@@ -10,6 +11,11 @@ interface ContactPageProps {
 }
 
 const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
+  const contactHeadingAnimation = useTypographyAnimation<HTMLHeadingElement>({
+    intensity: 0.11,
+    letterSpacingRange: 0.06,
+  });
+
   return (
     <div className={`min-h-screen transition-colors duration-700 ${theme === Theme.VIBRANT ? 'bg-[#fafafa]' : 'bg-neutral-950'}`}>
       <CustomCursor theme={theme} />
@@ -19,7 +25,11 @@ const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
         className="relative min-h-screen flex flex-col justify-center items-center py-32 px-6"
       >
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center gap-10 text-center">
-          <h2 className={`text-5xl md:text-7xl serif italic ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
+          <h2
+            ref={contactHeadingAnimation.ref}
+            style={contactHeadingAnimation.style}
+            className={`text-5xl md:text-7xl serif italic ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}
+          >
             Let's Create
           </h2>
           
@@ -66,4 +76,3 @@ const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
 };
 
 export default ContactPage;
-

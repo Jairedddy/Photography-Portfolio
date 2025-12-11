@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CustomCursor from '../components/CustomCursor';
 import { AnimatedTestimonials } from '../components/ui/animated-testimonials';
+import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
 
 interface AboutPageProps {
   theme: Theme;
@@ -11,6 +12,11 @@ interface AboutPageProps {
 }
 
 const AboutPage: React.FC<AboutPageProps> = ({ theme, toggleTheme }) => {
+  const quoteHeadingAnimation = useTypographyAnimation<HTMLHeadingElement>({
+    intensity: 0.09,
+    letterSpacingRange: 0.04,
+  });
+
   return (
     <div className={`min-h-screen transition-colors duration-700 ${theme === Theme.VIBRANT ? 'bg-[#fafafa]' : 'bg-neutral-950'}`}>
       <CustomCursor theme={theme} />
@@ -25,7 +31,11 @@ const AboutPage: React.FC<AboutPageProps> = ({ theme, toggleTheme }) => {
           </span>
           
           <div className="space-y-8">
-            <h2 className={`text-4xl md:text-6xl serif leading-tight ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
+            <h2
+              ref={quoteHeadingAnimation.ref}
+              style={quoteHeadingAnimation.style}
+              className={`text-4xl md:text-6xl serif leading-tight ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}
+            >
               "Color describes an object. Black and white describes the subject."
             </h2>
             
@@ -79,4 +89,3 @@ const AboutPage: React.FC<AboutPageProps> = ({ theme, toggleTheme }) => {
 };
 
 export default AboutPage;
-
