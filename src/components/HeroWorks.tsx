@@ -82,10 +82,10 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
         (isFocused || isExiting) ? 'z-50' : ''
       } ${
         isFocused 
-          ? 'scale-[1.03] shadow-2xl ring-1 ring-white/10' 
+          ? 'scale-[1.03]' 
           : isBackground
             ? 'scale-95 opacity-20 blur-[2px] grayscale pointer-events-none'
-            : `hover:-translate-y-1 ${theme === Theme.VIBRANT ? 'hover:shadow-lg' : 'hover:shadow-[0_10px_20px_-10px_rgba(255,255,255,0.05)]'}`
+            : ''
       }`}
       onClick={(e) => {
         e.stopPropagation();
@@ -99,8 +99,8 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
         style={parallax.style}
         className="relative h-full w-full transition-transform duration-[600ms] ease-[cubic-bezier(0.2,1,0.3,1)]"
       >
-      {/* Background Placeholder */}
-      <div className={`absolute inset-0 transition-colors duration-500 ${theme === Theme.VIBRANT ? 'bg-gray-200' : 'bg-neutral-900'}`} style={{ aspectRatio: `${photo.aspectRatio}` }} />
+        {/* Background Placeholder */}
+        <div className={`absolute inset-0 transition-colors duration-500 ${theme === Theme.VIBRANT ? 'bg-gray-200' : 'bg-neutral-900'}`} style={{ aspectRatio: `${photo.aspectRatio}` }} />
 
         {/* Skeleton Shimmer Effect */}
         {!isLoaded && (
@@ -118,15 +118,13 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
             src={photo.url} 
             alt={photo.title}
             onLoad={() => setIsLoaded(true)}
-            className={`relative z-20 w-full h-full object-cover transition-all duration-1000 ease-out transform will-change-transform ${
-              isLoaded ? 'opacity-100' : 'opacity-0'
-          } ${
-            isFocused 
-              ? `scale-105 blur-[2px] opacity-60 ${theme === Theme.MONOCHROME ? 'grayscale sepia-[.2] hue-rotate-[200deg]' : ''}` 
-              : isBackground 
-                ? `scale-100 ${theme === Theme.MONOCHROME ? 'grayscale' : ''}` 
-                : `group-hover:scale-[1.02] ${theme === Theme.MONOCHROME ? 'grayscale' : ''}`
-          }`}
+            className={`relative z-20 w-full h-full object-cover transition-all duration-1000 ease-out transform will-change-transform rounded-sm ${
+              isFocused 
+                ? `scale-105 blur-[2px] opacity-60 ${theme === Theme.MONOCHROME ? 'grayscale sepia-[.2] hue-rotate-[200deg]' : ''}` 
+                : isBackground 
+                  ? `scale-100 ${theme === Theme.MONOCHROME ? 'grayscale' : ''}` 
+                  : `${theme === Theme.MONOCHROME ? 'grayscale' : ''}`
+            }`}
             style={{ objectFit: 'cover' }}
           />
         )}
@@ -137,12 +135,12 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
             ? 'opacity-100 bg-black/50 justify-center items-center' 
             : isBackground 
               ? 'opacity-0'
-              : 'opacity-0 group-hover:opacity-100 bg-gradient-to-t from-black/70 via-black/10 to-transparent justify-end'
+              : 'opacity-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent justify-end'
         }`}>
           <div className={`transform transition-all duration-500 ease-out w-full flex flex-col ${
             isFocused 
               ? 'translate-y-0 items-center' 
-              : 'translate-y-4 group-hover:translate-y-0 items-start'
+              : 'translate-y-4 items-start'
           }`}>
             
             <p className={`serif italic tracking-wide text-white transition-all duration-500 text-center ${
@@ -375,7 +373,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
                 ? 'bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 bg-clip-text text-transparent' 
                 : 'text-white'
             }`}>
-              {theme === Theme.VIBRANT ? 'Framing Color' : 'Framing Silence'}
+              {theme === Theme.VIBRANT ? 'Capturing Color' : 'Capturing Silence'}
             </h2>
           </div>
           
