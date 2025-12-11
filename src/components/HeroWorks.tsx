@@ -327,28 +327,29 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
   return (
     <section 
       ref={sectionRef}
-      className="relative w-full overflow-hidden"
+      className="relative w-full"
     >
+      {/* Parallax Background Text - Spans entire component (Hero + Works) */}
+      {/* Using fixed positioning so it's not clipped by section overflow */}
+      <div 
+        className="fixed w-full text-center select-none pointer-events-none"
+        style={{ 
+          transform: `translate(-50%, calc(-50vh + ${scrollY * 0.6}px + 80px)) scale(${Math.min(3, 1 + scrollY * 0.002)})`,
+          opacity: Math.max(0, 0.03 - scrollY * 0.00008),
+          top: '50vh',
+          left: '50%',
+          transformOrigin: 'center center',
+          zIndex: 0,
+          willChange: 'transform, opacity'
+        }}
+      >
+        <h1 className={`text-[15rem] md:text-[25rem] leading-none font-bold serif tracking-tighter ${theme === Theme.LIGHT ? 'text-black' : 'text-white'}`}>
+          JAI REDDY
+        </h1>
+      </div>
+
       {/* Hero Section */}
-      <div className="relative h-screen flex flex-col justify-center items-center overflow-hidden z-10">
-        {/* Parallax Background Text - Positioned behind "Capturing Silence" */}
-        <div 
-          className="absolute w-full text-center select-none pointer-events-none"
-          style={{ 
-            transform: `translate(-50%, calc(-50% + ${scrollY * 0.6}px)) scale(${Math.min(3, 1 + scrollY * 0.002)})`,
-            opacity: Math.max(0, 0.03 - scrollY * 0.00008),
-            top: '50%',
-            left: '50%',
-            transformOrigin: 'center center',
-            zIndex: 1,
-            willChange: 'transform, opacity'
-          }}
-        >
-          <h1 className={`text-[15rem] md:text-[25rem] leading-none font-bold serif tracking-tighter ${theme === Theme.LIGHT ? 'text-black' : 'text-white'}`}>
-            JAI REDDY
-          </h1>
-        </div>
-        
+      <div className="relative h-screen flex flex-col justify-center items-center z-10">
         <div className="relative z-10 text-center space-y-8 px-4 mix-blend-difference">
           <p className="text-sm md:text-base tracking-[0.5em] uppercase text-white animate-[fadeIn_1.5s_ease-out_0.2s_forwards] opacity-0">
             World Through My Eyes (and Camera)
