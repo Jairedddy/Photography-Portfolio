@@ -3,6 +3,7 @@ import { Photo, Theme } from '../types';
 import PhotoModal from './PhotoModal';
 import { ArrowRight } from 'lucide-react';
 import { useParallax } from '../hooks/useParallax';
+import { AnimatedWordFlip } from './ui/animated-word-flip';
 
 interface HeroWorksProps {
   theme: Theme;
@@ -361,23 +362,34 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
         <div className="relative z-10 text-center space-y-8 px-4 mix-blend-difference">
           <p className={`text-sm md:text-base tracking-[0.5em] uppercase animate-[fadeIn_1.5s_ease-out_0.2s_forwards] opacity-0 ${
               theme === Theme.VIBRANT 
-                ? 'bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 bg-clip-text text-transparent' 
+                ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent' 
                 : 'text-white'
             }`}>
             World Through My Eyes (and Camera)
           </p>
           
           <div className="overflow-visible">
-            <h2 className={`text-6xl md:text-9xl font-light serif leading-tight animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0 ${
+            <h2 className={`text-6xl md:text-9xl font-light serif leading-tight animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0 inline-flex items-baseline justify-center gap-2 ${
               theme === Theme.VIBRANT 
-                ? 'bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 bg-clip-text text-transparent' 
+                ? '' 
                 : 'text-white'
             }`}>
-              {theme === Theme.VIBRANT ? 'Capturing Color' : 'Capturing Silence'}
+              <AnimatedWordFlip 
+                words={theme === Theme.VIBRANT 
+                  ? ['Capturing ', 'Freezing ', 'Framing ', 'Revealing ', 'Illuminating ', 'Preserving ']
+                  : ['Capturing ', 'Freezing ', 'Framing ', 'Revealing ', 'Preserving ', 'Documenting ']
+                }
+                interval={2500}
+                wordClassName={theme === Theme.VIBRANT 
+                  ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent' 
+                  : ''
+                }
+              />
+              <span className={theme === Theme.VIBRANT 
+                ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent' 
+                : ''}>{theme === Theme.VIBRANT ? 'Color' : 'Silence'}</span>
             </h2>
           </div>
-          
-          <div className="w-px h-24 bg-white mx-auto opacity-0 animate-[growHeight_1s_ease-out_1.5s_forwards]" />
         </div>
       </div>
 
@@ -391,7 +403,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
           <div className="mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
             <h2 className={`text-4xl md:text-6xl serif ${
               theme === Theme.VIBRANT 
-                ? 'bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 bg-clip-text text-transparent' 
+                ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent' 
                 : 'text-white'
             }`}>
               Selected Works

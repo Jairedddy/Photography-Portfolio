@@ -38,7 +38,6 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
           style={{ transform: `translate(${mousePos.x * -10}px, ${mousePos.y * -10}px)` }}
         >
           <h4 className="serif text-2xl">Jai Reddy</h4>
-          <p className="text-xs uppercase tracking-widest opacity-50 mt-1">Monochrome Portfolio</p>
         </div>
         
         <div 
