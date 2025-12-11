@@ -68,9 +68,11 @@ h1, h2, h3, h4, h5, h6, .serif {
   font-family: 'Cormorant Garamond', serif;
 }
 
-/* Custom scrollbar for minimalist look */
+/* Hide default vertical scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 0;
+  height: 0;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-track {
@@ -78,8 +80,17 @@ h1, h2, h3, h4, h5, h6, .serif {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 3px;
+  background: transparent;
+}
+
+/* For Firefox - hide scrollbar */
+html {
+  scrollbar-width: none;
+}
+
+/* Ensure no horizontal overflow */
+body {
+  overflow-x: hidden;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -122,24 +133,24 @@ html, body, *, *::before, *::after {
   color: inherit;
 }
 
-/* Light theme selection */
-.light-theme ::selection {
+/* Vibrant theme selection */
+.vibrant-theme ::selection {
   background-color: rgba(0, 0, 0, 0.15);
   color: inherit;
 }
 
-.light-theme ::-moz-selection {
+.vibrant-theme ::-moz-selection {
   background-color: rgba(0, 0, 0, 0.15);
   color: inherit;
 }
 
-/* Dark theme selection */
-.dark-theme ::selection {
+/* Monochrome theme selection */
+.monochrome-theme ::selection {
   background-color: rgba(255, 255, 255, 0.2);
   color: inherit;
 }
 
-.dark-theme ::-moz-selection {
+.monochrome-theme ::-moz-selection {
   background-color: rgba(255, 255, 255, 0.2);
   color: inherit;
 }

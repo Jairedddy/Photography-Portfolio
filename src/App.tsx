@@ -5,39 +5,42 @@ import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import { useScrollGrain } from './hooks/useScrollGrain';
+import ScrollProgressBar from './components/ScrollProgressBar';
 
 const App: React.FC = () => {
-  // Default theme set to DARK as requested
-  const [theme, setTheme] = useState<Theme>(Theme.DARK);
+  // Default theme set to MONOCHROME as requested
+  const [theme, setTheme] = useState<Theme>(Theme.MONOCHROME);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
+    setTheme(prev => prev === Theme.VIBRANT ? Theme.MONOCHROME : Theme.VIBRANT);
   };
 
   useScrollGrain(theme);
 
   useEffect(() => {
     // Set background color of body based on theme for overscroll areas
-    document.body.style.backgroundColor = theme === Theme.LIGHT ? '#fafafa' : '#0c0c0c';
+    // MONOCHROME = dark background, VIBRANT = light background
+    document.body.style.backgroundColor = theme === Theme.VIBRANT ? '#fafafa' : '#0c0c0c';
     
     // Add theme class for text selection colors
-    if (theme === Theme.LIGHT) {
-      document.documentElement.classList.add('light-theme');
-      document.documentElement.classList.remove('dark-theme');
+    if (theme === Theme.VIBRANT) {
+      document.documentElement.classList.add('vibrant-theme');
+      document.documentElement.classList.remove('monochrome-theme');
     } else {
-      document.documentElement.classList.add('dark-theme');
-      document.documentElement.classList.remove('light-theme');
+      document.documentElement.classList.add('monochrome-theme');
+      document.documentElement.classList.remove('vibrant-theme');
     }
     
     // Update favicon based on theme
     const favicon = document.getElementById('favicon') as HTMLLinkElement;
     if (favicon) {
-      favicon.href = theme === Theme.LIGHT ? '/favicon-light.svg' : '/favicon-dark.svg';
+      favicon.href = theme === Theme.VIBRANT ? '/favicon-light.svg' : '/favicon-dark.svg';
     }
   }, [theme]);
 
   return (
     <Router>
+      <ScrollProgressBar theme={theme} />
       <Routes>
         <Route path="/" element={<HomePage theme={theme} toggleTheme={toggleTheme} />} />
         <Route path="/about" element={<AboutPage theme={theme} toggleTheme={toggleTheme} />} />

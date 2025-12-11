@@ -82,7 +82,7 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
           ? 'scale-[1.03] shadow-2xl ring-1 ring-white/10' 
           : isBackground
             ? 'scale-95 opacity-20 blur-[2px] grayscale pointer-events-none'
-            : `hover:-translate-y-1 ${theme === Theme.LIGHT ? 'hover:shadow-lg' : 'hover:shadow-[0_10px_20px_-10px_rgba(255,255,255,0.05)]'}`
+            : `hover:-translate-y-1 ${theme === Theme.VIBRANT ? 'hover:shadow-lg' : 'hover:shadow-[0_10px_20px_-10px_rgba(255,255,255,0.05)]'}`
       }`}
       onClick={(e) => {
         e.stopPropagation();
@@ -93,13 +93,13 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
       }}
     >
       {/* Background Placeholder */}
-      <div className={`absolute inset-0 transition-colors duration-500 ${theme === Theme.LIGHT ? 'bg-gray-200' : 'bg-neutral-900'}`} style={{ aspectRatio: `${photo.aspectRatio}` }} />
+      <div className={`absolute inset-0 transition-colors duration-500 ${theme === Theme.VIBRANT ? 'bg-gray-200' : 'bg-neutral-900'}`} style={{ aspectRatio: `${photo.aspectRatio}` }} />
 
       {/* Skeleton Shimmer Effect - Visible only while loading */}
       {!isLoaded && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
            <div className={`w-full h-full absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r ${
-              theme === Theme.LIGHT 
+              theme === Theme.VIBRANT 
                 ? 'from-transparent via-white/40 to-transparent' 
                 : 'from-transparent via-white/5 to-transparent'
            }`} />
@@ -115,10 +115,10 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
             isLoaded ? 'opacity-100' : 'opacity-0'
           } ${
             isFocused 
-              ? `scale-105 blur-[2px] opacity-60 ${theme === Theme.LIGHT ? 'grayscale sepia-[.15]' : 'grayscale sepia-[.2] hue-rotate-[200deg]'}` 
+              ? `scale-105 blur-[2px] opacity-60 ${theme === Theme.MONOCHROME ? 'grayscale sepia-[.2] hue-rotate-[200deg]' : ''}` 
               : isBackground 
-                ? 'scale-100 grayscale' 
-                : 'group-hover:scale-[1.02] grayscale'
+                ? `scale-100 ${theme === Theme.MONOCHROME ? 'grayscale' : ''}` 
+                : `group-hover:scale-[1.02] ${theme === Theme.MONOCHROME ? 'grayscale' : ''}`
           }`}
           style={{ objectFit: 'cover' }}
         />
@@ -363,13 +363,13 @@ const Gallery: React.FC<GalleryProps> = ({ theme }) => {
           top: '-50%'
         }}
       >
-        <h1 className={`text-[15rem] md:text-[25rem] leading-none font-bold serif tracking-tighter ${theme === Theme.LIGHT ? 'text-black' : 'text-white'}`}>
+        <h1 className={`text-[15rem] md:text-[25rem] leading-none font-bold serif tracking-tighter ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
           JAI REDDY
         </h1>
       </div>
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
-          <h2 className={`text-4xl md:text-6xl serif ${theme === Theme.LIGHT ? 'text-black' : 'text-white'}`}>
+          <h2 className={`text-4xl md:text-6xl serif ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
             Selected Works
           </h2>
         </div>
@@ -406,7 +406,7 @@ const Gallery: React.FC<GalleryProps> = ({ theme }) => {
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
-            <div className={`mt-24 flex justify-center items-center gap-8 ${theme === Theme.LIGHT ? 'text-black' : 'text-white'}`}>
+            <div className={`mt-24 flex justify-center items-center gap-8 ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
@@ -422,8 +422,8 @@ const Gallery: React.FC<GalleryProps> = ({ theme }) => {
                             onClick={() => handlePageChange(number)}
                             className={`w-8 h-8 flex items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
                                 currentPage === number
-                                    ? (theme === Theme.LIGHT ? 'bg-black text-[#fafafa]' : 'bg-white text-black')
-                                    : (theme === Theme.LIGHT ? 'hover:bg-gray-200' : 'hover:bg-neutral-800')
+                                    ? (theme === Theme.VIBRANT ? 'bg-black text-[#fafafa]' : 'bg-white text-black')
+                                    : (theme === Theme.VIBRANT ? 'hover:bg-gray-200' : 'hover:bg-neutral-800')
                             }`}
                         >
                             {number}

@@ -46,10 +46,10 @@ const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
 
   // Determine colors based on theme and hover state
   const dotColor = isHovering 
-    ? (theme === Theme.DARK ? 'black' : 'white')
-    : (theme === Theme.DARK ? 'white' : 'black');
+    ? (theme === Theme.MONOCHROME ? 'black' : 'white')
+    : (theme === Theme.MONOCHROME ? 'white' : 'black');
   
-  const ringColor = theme === Theme.DARK ? 'white' : 'black';
+  const ringColor = theme === Theme.MONOCHROME ? 'white' : 'black';
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden">

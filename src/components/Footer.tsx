@@ -31,7 +31,7 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
       className="py-12 border-t transition-colors duration-500 overflow-hidden relative"
     >
       
-      <div className={`relative z-10 ${theme === Theme.LIGHT ? 'border-gray-200 text-black' : 'border-neutral-900 text-white'}`}>
+      <div className={`relative z-10 ${theme === Theme.VIBRANT ? 'border-gray-200 text-black' : 'border-neutral-900 text-white'}`}>
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
         <div 
           className="text-center md:text-left transition-transform duration-500 ease-out will-change-transform"

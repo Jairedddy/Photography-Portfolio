@@ -49,9 +49,9 @@ export const AnimatedTestimonials: React.FC<AnimatedTestimonialsProps> = ({
     return Math.floor(Math.random() * 21) - 10;
   };
 
-  const textColor = theme === Theme.LIGHT ? 'text-black' : 'text-white';
-  const mutedTextColor = theme === Theme.LIGHT ? 'text-gray-600' : 'text-neutral-400';
-  const secondaryBg = theme === Theme.LIGHT ? 'bg-gray-100' : 'bg-neutral-800';
+  const textColor = theme === Theme.VIBRANT ? 'text-black' : 'text-white';
+  const mutedTextColor = theme === Theme.VIBRANT ? 'text-gray-600' : 'text-neutral-400';
+  const secondaryBg = theme === Theme.VIBRANT ? 'bg-gray-100' : 'bg-neutral-800';
 
   return (
     <div className={cn("max-w-sm md:max-w-4xl mx-auto px-4 md:px-8 lg:px-12 py-20", className)}>
@@ -94,7 +94,7 @@ export const AnimatedTestimonials: React.FC<AnimatedTestimonialsProps> = ({
                     src={testimonial.src}
                     alt={testimonial.name}
                     draggable={false}
-                    className="h-full w-full rounded-3xl object-cover object-center grayscale"
+                    className={`h-full w-full rounded-3xl object-cover object-center ${theme === Theme.MONOCHROME ? 'grayscale' : ''}`}
                   />
                 </motion.div>
               ))}

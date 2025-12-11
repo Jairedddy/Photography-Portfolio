@@ -12,7 +12,7 @@ interface HomePageProps {
 
 const HomePage: React.FC<HomePageProps> = ({ theme, toggleTheme }) => {
   return (
-    <div className={`min-h-screen transition-colors duration-700 ${theme === Theme.LIGHT ? 'bg-[#fafafa]' : 'bg-neutral-950'}`}>
+    <div className={`min-h-screen transition-colors duration-700 ${theme === Theme.VIBRANT ? 'bg-[#fafafa]' : 'bg-neutral-950'}`}>
       <CustomCursor theme={theme} />
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       

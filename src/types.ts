@@ -8,7 +8,7 @@ export interface Photo {
   }
   
   export enum Theme {
-    LIGHT = 'LIGHT',
-    DARK = 'DARK'
+    MONOCHROME = 'MONOCHROME',  // Dark background + monochrome images
+    VIBRANT = 'VIBRANT'         // Light background + colorful images
   }
   

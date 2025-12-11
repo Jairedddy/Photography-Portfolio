@@ -4,8 +4,8 @@ import { Theme } from '../types';
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
 const THEME_MULTIPLIER: Record<Theme, number> = {
-  [Theme.DARK]: 1.25,
-  [Theme.LIGHT]: 0.85,
+  [Theme.MONOCHROME]: 1.25,
+  [Theme.VIBRANT]: 0.85,
 };
 
 const computeOpacity = (theme: Theme) => {

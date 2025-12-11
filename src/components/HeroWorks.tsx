@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Photo, Theme } from '../types';
 import PhotoModal from './PhotoModal';
 import { ArrowRight } from 'lucide-react';
+import { useParallax } from '../hooks/useParallax';
 
 interface HeroWorksProps {
   theme: Theme;
@@ -37,14 +38,16 @@ interface GalleryItemProps {
   isFocused: boolean;
   isExiting: boolean;
   isAnyFocused: boolean;
+  parallaxSpeed: number;
   onClick: (photo: Photo, rect: DOMRect) => void;
   onViewDetails: (photo: Photo, rect: DOMRect) => void;
 }
 
-const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isExiting, isAnyFocused, onClick, onViewDetails }) => {
+const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isExiting, isAnyFocused, parallaxSpeed, onClick, onViewDetails }) => {
   const [isInView, setIsInView] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const parallax = useParallax<HTMLDivElement>(parallaxSpeed);
 
   // Determine if this specific item should fade into background
   const isBackground = isAnyFocused && !isFocused;
@@ -82,7 +85,7 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
           ? 'scale-[1.03] shadow-2xl ring-1 ring-white/10' 
           : isBackground
             ? 'scale-95 opacity-20 blur-[2px] grayscale pointer-events-none'
-            : `hover:-translate-y-1 ${theme === Theme.LIGHT ? 'hover:shadow-lg' : 'hover:shadow-[0_10px_20px_-10px_rgba(255,255,255,0.05)]'}`
+            : `hover:-translate-y-1 ${theme === Theme.VIBRANT ? 'hover:shadow-lg' : 'hover:shadow-[0_10px_20px_-10px_rgba(255,255,255,0.05)]'}`
       }`}
       onClick={(e) => {
         e.stopPropagation();
@@ -91,80 +94,86 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
         }
       }}
     >
+      <div
+        ref={parallax.ref}
+        style={parallax.style}
+        className="relative h-full w-full transition-transform duration-[600ms] ease-[cubic-bezier(0.2,1,0.3,1)]"
+      >
       {/* Background Placeholder */}
-      <div className={`absolute inset-0 transition-colors duration-500 ${theme === Theme.LIGHT ? 'bg-gray-200' : 'bg-neutral-900'}`} style={{ aspectRatio: `${photo.aspectRatio}` }} />
+      <div className={`absolute inset-0 transition-colors duration-500 ${theme === Theme.VIBRANT ? 'bg-gray-200' : 'bg-neutral-900'}`} style={{ aspectRatio: `${photo.aspectRatio}` }} />
 
-      {/* Skeleton Shimmer Effect */}
-      {!isLoaded && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
-           <div className={`w-full h-full absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r ${
-              theme === Theme.LIGHT 
+        {/* Skeleton Shimmer Effect */}
+        {!isLoaded && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
+            <div className={`w-full h-full absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r ${
+              theme === Theme.VIBRANT 
                 ? 'from-transparent via-white/40 to-transparent' 
                 : 'from-transparent via-white/5 to-transparent'
-           }`} />
-        </div>
-      )}
+            }`} />
+          </div>
+        )}
 
-      {isInView && (
-        <img 
-          src={photo.url} 
-          alt={photo.title}
-          onLoad={() => setIsLoaded(true)}
-          className={`relative z-20 w-full h-full object-cover transition-all duration-1000 ease-out transform will-change-transform ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
+        {isInView && (
+          <img 
+            src={photo.url} 
+            alt={photo.title}
+            onLoad={() => setIsLoaded(true)}
+            className={`relative z-20 w-full h-full object-cover transition-all duration-1000 ease-out transform will-change-transform ${
+              isLoaded ? 'opacity-100' : 'opacity-0'
           } ${
             isFocused 
-              ? `scale-105 blur-[2px] opacity-60 ${theme === Theme.LIGHT ? 'grayscale sepia-[.15]' : 'grayscale sepia-[.2] hue-rotate-[200deg]'}` 
+              ? `scale-105 blur-[2px] opacity-60 ${theme === Theme.MONOCHROME ? 'grayscale sepia-[.2] hue-rotate-[200deg]' : ''}` 
               : isBackground 
-                ? 'scale-100 grayscale' 
-                : 'group-hover:scale-[1.02] grayscale'
+                ? `scale-100 ${theme === Theme.MONOCHROME ? 'grayscale' : ''}` 
+                : `group-hover:scale-[1.02] ${theme === Theme.MONOCHROME ? 'grayscale' : ''}`
           }`}
-          style={{ objectFit: 'cover' }}
-        />
-      )}
-      
-      {/* Overlay */}
-      <div className={`absolute inset-0 z-30 transition-all duration-500 flex flex-col p-6 ${
-        isFocused 
-          ? 'opacity-100 bg-black/50 justify-center items-center' 
-          : isBackground 
-            ? 'opacity-0'
-            : 'opacity-0 group-hover:opacity-100 bg-gradient-to-t from-black/70 via-black/10 to-transparent justify-end'
-      }`}>
-        <div className={`transform transition-all duration-500 ease-out w-full flex flex-col ${
+            style={{ objectFit: 'cover' }}
+          />
+        )}
+        
+        {/* Overlay */}
+        <div className={`absolute inset-0 z-30 transition-all duration-500 flex flex-col p-6 ${
           isFocused 
-            ? 'translate-y-0 items-center' 
-            : 'translate-y-4 group-hover:translate-y-0 items-start'
+            ? 'opacity-100 bg-black/50 justify-center items-center' 
+            : isBackground 
+              ? 'opacity-0'
+              : 'opacity-0 group-hover:opacity-100 bg-gradient-to-t from-black/70 via-black/10 to-transparent justify-end'
         }`}>
-          
-          <p className={`serif italic tracking-wide text-white transition-all duration-500 text-center ${
-            isFocused ? 'text-3xl mb-3 scale-105' : 'text-xl md:text-2xl text-left'
+          <div className={`transform transition-all duration-500 ease-out w-full flex flex-col ${
+            isFocused 
+              ? 'translate-y-0 items-center' 
+              : 'translate-y-4 group-hover:translate-y-0 items-start'
           }`}>
-            {photo.title}
-          </p>
-          
-          <div className={`flex items-center gap-3 mt-2 transition-all duration-500 ${isFocused ? 'justify-center opacity-80' : 'justify-start'}`}>
-             <span className={`h-[1px] bg-white/60 transition-all duration-500 ${isFocused ? 'w-12' : 'w-6'}`}></span>
-             <p className="text-white/90 text-[10px] md:text-xs uppercase tracking-[0.2em]">{photo.category}</p>
-             {isFocused && <span className="h-[1px] w-12 bg-white/60"></span>}
-          </div>
+            
+            <p className={`serif italic tracking-wide text-white transition-all duration-500 text-center ${
+              isFocused ? 'text-3xl mb-3 scale-105' : 'text-xl md:text-2xl text-left'
+            }`}>
+              {photo.title}
+            </p>
+            
+            <div className={`flex items-center gap-3 mt-2 transition-all duration-500 ${isFocused ? 'justify-center opacity-80' : 'justify-start'}`}>
+              <span className={`h-[1px] bg-white/60 transition-all duration-500 ${isFocused ? 'w-12' : 'w-6'}`}></span>
+              <p className="text-white/90 text-[10px] md:text-xs uppercase tracking-[0.2em]">{photo.category}</p>
+              {isFocused && <span className="h-[1px] w-12 bg-white/60"></span>}
+            </div>
 
-          {/* View Project Button */}
-          <div className={`overflow-hidden transition-all duration-700 delay-100 ${isFocused ? 'max-h-20 opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (containerRef.current) {
-                  onViewDetails(photo, containerRef.current.getBoundingClientRect());
-                }
-              }}
-              className="flex items-center gap-3 text-white text-[10px] font-bold tracking-[0.3em] uppercase border border-white/30 px-5 py-2 rounded-full bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/50 transition-all cursor-pointer"
-            >
-              <span>View</span>
-              <ArrowRight size={12} />
-            </button>
-          </div>
+            {/* View Project Button */}
+            <div className={`overflow-hidden transition-all duration-700 delay-100 ${isFocused ? 'max-h-20 opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (containerRef.current) {
+                    onViewDetails(photo, containerRef.current.getBoundingClientRect());
+                  }
+                }}
+                className="flex items-center gap-3 text-white text-[10px] font-bold tracking-[0.3em] uppercase border border-white/30 px-5 py-2 rounded-full bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/50 transition-all cursor-pointer"
+              >
+                <span>View</span>
+                <ArrowRight size={12} />
+              </button>
+            </div>
 
+          </div>
         </div>
       </div>
     </div>
@@ -254,6 +263,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
   const gridLayout = useMemo(() => {
     return calculateGridLayout(currentPhotos, gridColumns);
   }, [currentPhotos, gridColumns]);
+  const speedPattern = useMemo(() => [0.12, 0.16, 0.2, 0.24, 0.3], []);
 
   const handlePageChange = (page: number) => {
     clearFocus();
@@ -343,7 +353,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
           willChange: 'transform, opacity'
         }}
       >
-        <h1 className={`text-[15rem] md:text-[25rem] leading-none font-bold serif tracking-tighter ${theme === Theme.LIGHT ? 'text-black' : 'text-white'}`}>
+        <h1 className={`text-[15rem] md:text-[25rem] leading-none font-bold serif tracking-tighter ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
           JAI REDDY
         </h1>
       </div>
@@ -351,13 +361,21 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
       {/* Hero Section */}
       <div className="relative h-screen flex flex-col justify-center items-center z-10">
         <div className="relative z-10 text-center space-y-8 px-4 mix-blend-difference">
-          <p className="text-sm md:text-base tracking-[0.5em] uppercase text-white animate-[fadeIn_1.5s_ease-out_0.2s_forwards] opacity-0">
+          <p className={`text-sm md:text-base tracking-[0.5em] uppercase animate-[fadeIn_1.5s_ease-out_0.2s_forwards] opacity-0 ${
+              theme === Theme.VIBRANT 
+                ? 'bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 bg-clip-text text-transparent' 
+                : 'text-white'
+            }`}>
             World Through My Eyes (and Camera)
           </p>
           
-          <div className="overflow-hidden">
-            <h2 className="text-6xl md:text-9xl font-light serif text-white animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0">
-              Capturing Silence
+          <div className="overflow-visible">
+            <h2 className={`text-6xl md:text-9xl font-light serif leading-tight animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0 ${
+              theme === Theme.VIBRANT 
+                ? 'bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 bg-clip-text text-transparent' 
+                : 'text-white'
+            }`}>
+              {theme === Theme.VIBRANT ? 'Framing Color' : 'Framing Silence'}
             </h2>
           </div>
           
@@ -373,7 +391,11 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
       >
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
-            <h2 className={`text-4xl md:text-6xl serif ${theme === Theme.LIGHT ? 'text-black' : 'text-white'}`}>
+            <h2 className={`text-4xl md:text-6xl serif ${
+              theme === Theme.VIBRANT 
+                ? 'bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 bg-clip-text text-transparent' 
+                : 'text-white'
+            }`}>
               Selected Works
             </h2>
           </div>
@@ -387,30 +409,34 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
               gridAutoRows: '300px',
             }}
           >
-            {gridLayout.map(({ photo, rowSpan, colSpan }) => (
-              <div
-                key={photo.id}
-                style={{
-                  gridRow: `span ${rowSpan}`,
-                  gridColumn: `span ${colSpan}`,
-                }}
-              >
-                <GalleryItem
-                  photo={photo}
-                  theme={theme}
-                  isFocused={focusedPhotoId === photo.id}
-                  isExiting={exitingPhotoId === photo.id}
-                  isAnyFocused={isAnyFocused}
-                  onClick={handlePhotoClick}
-                  onViewDetails={handleViewDetails}
-                />
-              </div>
-            ))}
+            {gridLayout.map(({ photo, rowSpan, colSpan }, index) => {
+              const parallaxSpeed = speedPattern[index % speedPattern.length];
+              return (
+                <div
+                  key={photo.id}
+                  style={{
+                    gridRow: `span ${rowSpan}`,
+                    gridColumn: `span ${colSpan}`,
+                  }}
+                >
+                  <GalleryItem
+                    photo={photo}
+                    theme={theme}
+                    isFocused={focusedPhotoId === photo.id}
+                    isExiting={exitingPhotoId === photo.id}
+                    isAnyFocused={isAnyFocused}
+                    parallaxSpeed={parallaxSpeed}
+                    onClick={handlePhotoClick}
+                    onViewDetails={handleViewDetails}
+                  />
+                </div>
+              );
+            })}
           </div>
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-              <div className={`mt-24 flex justify-center items-center gap-8 ${theme === Theme.LIGHT ? 'text-black' : 'text-white'}`}>
+              <div className={`mt-24 flex justify-center items-center gap-8 ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
                   <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
@@ -426,8 +452,8 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
                               onClick={() => handlePageChange(number)}
                               className={`w-8 h-8 flex items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
                                   currentPage === number
-                                      ? (theme === Theme.LIGHT ? 'bg-black text-[#fafafa]' : 'bg-white text-black')
-                                      : (theme === Theme.LIGHT ? 'hover:bg-gray-200' : 'hover:bg-neutral-800')
+                                      ? (theme === Theme.VIBRANT ? 'bg-black text-[#fafafa]' : 'bg-white text-black')
+                                      : (theme === Theme.VIBRANT ? 'hover:bg-gray-200' : 'hover:bg-neutral-800')
                               }`}
                           >
                               {number}
@@ -480,4 +506,3 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
 };
 
 export default HeroWorks;
-

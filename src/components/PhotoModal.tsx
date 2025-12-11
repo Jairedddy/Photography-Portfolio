@@ -90,7 +90,7 @@ const PhotoModal: React.FC<PhotoModalProps> = ({ photo, theme, originRect, onClo
       {/* Content */}
       <div 
         ref={contentRef}
-        className={`relative w-full max-w-6xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden shadow-2xl ${theme === Theme.LIGHT ? 'bg-[#fafafa]' : 'bg-neutral-900'}`}
+        className={`relative w-full max-w-6xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden shadow-2xl ${theme === Theme.VIBRANT ? 'bg-[#fafafa]' : 'bg-neutral-900'}`}
       >
         
         {/* Image Container */}
@@ -98,15 +98,15 @@ const PhotoModal: React.FC<PhotoModalProps> = ({ photo, theme, originRect, onClo
           <img 
             src={photo.url} 
             alt={photo.title}
-            className="max-h-[60vh] md:max-h-[90vh] w-auto object-contain grayscale transition-transform duration-700 hover:scale-[1.02]"
+            className={`max-h-[60vh] md:max-h-[90vh] w-auto object-contain transition-transform duration-700 hover:scale-[1.02] ${theme === Theme.MONOCHROME ? 'grayscale' : ''}`}
           />
         </div>
 
         {/* Details Panel - Fade in text slightly delayed */}
-        <div className={`w-full md:w-96 flex flex-col p-8 md:p-12 shrink-0 transition-opacity duration-700 delay-200 ${isClosing ? 'opacity-0' : 'opacity-100'} ${theme === Theme.LIGHT ? 'text-black' : 'text-white'}`}>
+        <div className={`w-full md:w-96 flex flex-col p-8 md:p-12 shrink-0 transition-opacity duration-700 delay-200 ${isClosing ? 'opacity-0' : 'opacity-100'} ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
           <button 
             onClick={handleClose}
-            className={`self-end mb-8 p-2 rounded-full hover:bg-opacity-10 transition-colors ${theme === Theme.LIGHT ? 'hover:bg-black' : 'hover:bg-white'}`}
+            className={`self-end mb-8 p-2 rounded-full hover:bg-opacity-10 transition-colors ${theme === Theme.VIBRANT ? 'hover:bg-black' : 'hover:bg-white'}`}
           >
             <X className="w-6 h-6" />
           </button>
@@ -119,7 +119,7 @@ const PhotoModal: React.FC<PhotoModalProps> = ({ photo, theme, originRect, onClo
             
             <div className="w-12 h-[1px] bg-current opacity-20" />
             
-            <p className={`text-sm leading-relaxed ${theme === Theme.LIGHT ? 'text-gray-600' : 'text-gray-400'}`}>
+            <p className={`text-sm leading-relaxed ${theme === Theme.VIBRANT ? 'text-gray-600' : 'text-gray-400'}`}>
               {photo.description || "A study in contrast and light. This piece explores the subtle gradients between absolute black and blinding white, capturing a moment of stillness in a chaotic world."}
             </p>
 

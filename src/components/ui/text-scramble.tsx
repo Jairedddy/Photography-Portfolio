@@ -65,12 +65,12 @@ export function TextScramble({ text, className = "", theme, isActive = false }: 
   }, []);
 
   // Theme-based colors
-  const textColor = theme === Theme.LIGHT ? 'text-black' : 'text-neutral-300';
-  const activeTextColor = theme === Theme.LIGHT ? 'text-black' : 'text-white';
-  const borderColor = theme === Theme.LIGHT ? 'bg-gray-300' : 'bg-neutral-700';
-  const underlineColor = theme === Theme.LIGHT ? 'bg-black' : 'bg-white';
-  const glowColor = theme === Theme.LIGHT ? 'bg-black/5' : 'bg-white/5';
-  const scrambleColor = theme === Theme.LIGHT ? 'text-black' : 'text-white';
+  const textColor = theme === Theme.VIBRANT ? 'text-black' : 'text-neutral-300';
+  const activeTextColor = theme === Theme.VIBRANT ? 'text-black' : 'text-white';
+  const borderColor = theme === Theme.VIBRANT ? 'bg-gray-300' : 'bg-neutral-700';
+  const underlineColor = theme === Theme.VIBRANT ? 'bg-black' : 'bg-white';
+  const glowColor = theme === Theme.VIBRANT ? 'bg-black/5' : 'bg-white/5';
+  const scrambleColor = theme === Theme.VIBRANT ? 'text-black' : 'text-white';
 
   return (
     <div
@@ -79,19 +79,34 @@ export function TextScramble({ text, className = "", theme, isActive = false }: 
       onMouseLeave={handleMouseLeave}
     >
       <span className={`relative text-sm tracking-widest uppercase ${isActive ? activeTextColor : textColor}`}>
-        {displayText.split("").map((char, i) => (
-          <span
-            key={i}
-            className={`inline-block transition-all duration-150 ${
-              isScrambling && char !== text[i] ? `${scrambleColor} scale-110` : ""
-            }`}
-            style={{
-              transitionDelay: `${i * 10}ms`,
-            }}
-          >
-            {char}
-          </span>
-        ))}
+        {displayText.split("").map((char, i) => {
+          const isScrambled = isScrambling && char !== text[i];
+          const colorIndex = i % 6;
+          const vibrantColors = [
+            'text-purple-500',
+            'text-pink-500',
+            'text-orange-500',
+            'text-blue-500',
+            'text-green-500',
+            'text-yellow-500'
+          ];
+          
+          return (
+            <span
+              key={i}
+              className={`inline-block transition-all duration-150 ${
+                isScrambled 
+                  ? `${theme === Theme.VIBRANT ? vibrantColors[colorIndex] : scrambleColor} scale-110 font-bold` 
+                  : ""
+              }`}
+              style={{
+                transitionDelay: `${i * 10}ms`,
+              }}
+            >
+              {char}
+            </span>
+          );
+        })}
       </span>
 
       {/* Animated underline */}
