@@ -334,8 +334,8 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
       <div 
         className="fixed w-full text-center select-none pointer-events-none"
         style={{ 
-          transform: `translate(-50%, calc(-50vh + ${scrollY * 0.6}px + 80px)) scale(${Math.min(3, 1 + scrollY * 0.002)})`,
-          opacity: Math.max(0, 0.03 - scrollY * 0.00008),
+          transform: `translate(-50%, calc(-50vh + ${scrollY * 0.6}px + 80px)) scale(${Math.min(3, 0.7 + scrollY * 0.0015)})`,
+          opacity: Math.max(0, 0.03 - scrollY * 0.00004),
           top: '50vh',
           left: '50%',
           transformOrigin: 'center center',

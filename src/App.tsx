@@ -4,6 +4,7 @@ import { Theme } from './types';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import { useScrollGrain } from './hooks/useScrollGrain';
 
 const App: React.FC = () => {
   // Default theme set to DARK as requested
@@ -12,6 +13,8 @@ const App: React.FC = () => {
   const toggleTheme = () => {
     setTheme(prev => prev === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
   };
+
+  useScrollGrain(theme);
 
   useEffect(() => {
     // Set background color of body based on theme for overscroll areas

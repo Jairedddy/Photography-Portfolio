@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Theme } from '../types';
 import { Sun, Moon } from 'lucide-react';
+import { TextScramble } from './ui/text-scramble';
 
 interface NavbarProps {
   theme: Theme;
@@ -75,9 +76,13 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             <li className="relative group">
               <Link 
                 to="/"
-                className={`block text-sm tracking-widest uppercase hover:opacity-50 transition-opacity ${theme === Theme.LIGHT ? 'text-black' : 'text-neutral-300'} ${location.pathname === '/' ? 'opacity-100' : 'opacity-70'}`}
+                className="block"
               >
-                Works
+                <TextScramble 
+                  text="WORKS" 
+                  theme={theme}
+                  isActive={location.pathname === '/'}
+                />
               </Link>
               <span className={`
                 absolute left-1/2 -translate-x-1/2 top-full mt-5
@@ -94,9 +99,13 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             <li className="relative group">
               <Link 
                 to="/about"
-                className={`block text-sm tracking-widest uppercase hover:opacity-50 transition-opacity ${theme === Theme.LIGHT ? 'text-black' : 'text-neutral-300'} ${location.pathname === '/about' ? 'opacity-100' : 'opacity-70'}`}
+                className="block"
               >
-                About
+                <TextScramble 
+                  text="ABOUT" 
+                  theme={theme}
+                  isActive={location.pathname === '/about'}
+                />
               </Link>
               <span className={`
                 absolute left-1/2 -translate-x-1/2 top-full mt-5
@@ -113,9 +122,13 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             <li className="relative group">
               <Link 
                 to="/contact"
-                className={`block text-sm tracking-widest uppercase hover:opacity-50 transition-opacity ${theme === Theme.LIGHT ? 'text-black' : 'text-neutral-300'} ${location.pathname === '/contact' ? 'opacity-100' : 'opacity-70'}`}
+                className="block"
               >
-                Contact
+                <TextScramble 
+                  text="CONTACT" 
+                  theme={theme}
+                  isActive={location.pathname === '/contact'}
+                />
               </Link>
               <span className={`
                 absolute left-1/2 -translate-x-1/2 top-full mt-5
