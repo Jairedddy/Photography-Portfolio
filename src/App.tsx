@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { Theme } from './types';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import { useScrollGrain } from './hooks/useScrollGrain';
 import ScrollProgressBar from './components/ScrollProgressBar';
+import PageTransition from './components/PageTransition';
+import TransitionGrain from './components/TransitionGrain';
 
 const App: React.FC = () => {
   // Default theme set to MONOCHROME as requested
@@ -41,12 +44,45 @@ const App: React.FC = () => {
   return (
     <Router>
       <ScrollProgressBar theme={theme} />
-      <Routes>
-        <Route path="/" element={<HomePage theme={theme} toggleTheme={toggleTheme} />} />
-        <Route path="/about" element={<AboutPage theme={theme} toggleTheme={toggleTheme} />} />
-        <Route path="/contact" element={<ContactPage theme={theme} toggleTheme={toggleTheme} />} />
-      </Routes>
+      <TransitionGrain />
+      <AnimatedRoutes theme={theme} toggleTheme={toggleTheme} />
     </Router>
+  );
+};
+
+// Separate component to use useLocation hook
+const AnimatedRoutes: React.FC<{ theme: Theme; toggleTheme: () => void }> = ({ theme, toggleTheme }) => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <PageTransition>
+              <HomePage theme={theme} toggleTheme={toggleTheme} />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <PageTransition>
+              <AboutPage theme={theme} toggleTheme={toggleTheme} />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <PageTransition>
+              <ContactPage theme={theme} toggleTheme={toggleTheme} />
+            </PageTransition>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
   );
 };
 
