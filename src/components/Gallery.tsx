@@ -341,6 +341,13 @@ const Gallery: React.FC<GalleryProps> = ({ theme }) => {
     setFocusedPhotoId(null);
     clearFocus();
   };
+  
+  // Find current photo index in all photos
+  const getCurrentPhotoIndex = (): number => {
+    if (!selectedPhoto) return 0;
+    const index = PHOTOS.findIndex(p => p.id === selectedPhoto.id);
+    return index >= 0 ? index : 0;
+  };
 
   const handleBackgroundClick = () => {
     if (focusedPhotoId) clearFocus();
@@ -444,7 +451,9 @@ const Gallery: React.FC<GalleryProps> = ({ theme }) => {
 
       {selectedPhoto && (
         <PhotoModal 
-          photo={selectedPhoto} 
+          photo={selectedPhoto}
+          photos={PHOTOS}
+          currentIndex={getCurrentPhotoIndex()}
           theme={theme} 
           originRect={originRect}
           onClose={() => setSelectedPhoto(null)} 
