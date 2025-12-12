@@ -29,6 +29,9 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="py-12 border-t transition-colors duration-500 overflow-hidden relative"
+      style={{
+        backgroundColor: 'transparent',
+      }}
     >
       
       <div className={`relative z-10 ${theme === Theme.VIBRANT ? 'border-gray-200 text-black' : 'border-neutral-900 text-white'}`}>

@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import CustomCursor from '../components/CustomCursor';
 import { AnimatedTestimonials } from '../components/ui/animated-testimonials';
 import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
+import HorizontalScrollCarousel from '../components/HorizontalScrollCarousel';
 
 interface AboutPageProps {
   theme: Theme;
@@ -83,7 +84,27 @@ const AboutPage: React.FC<AboutPageProps> = ({ theme, toggleTheme }) => {
         </div>
       </section>
 
-      <Footer theme={theme} />
+      {/* Horizontal Scroll Carousel Section with extended background */}
+      <div className="relative">
+        {/* Extended background that covers carousel and footer area */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0,
+            background: theme === Theme.MONOCHROME
+              ? 'radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%)'
+              : 'radial-gradient(circle at center, rgba(139,92,246,0.1) 0%, transparent 70%)',
+            opacity: 1,
+            transition: 'opacity 0.7s ease-out',
+          }}
+        />
+        <HorizontalScrollCarousel theme={theme} />
+        <Footer theme={theme} />
+      </div>
     </div>
   );
 };
