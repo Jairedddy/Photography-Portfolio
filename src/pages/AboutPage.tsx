@@ -63,19 +63,19 @@ const AboutPage: React.FC<AboutPageProps> = ({ theme, toggleTheme }) => {
                 quote: "Capturing moments in monochrome allows me to focus on the essence of composition, light, and emotion without the distraction of color.",
                 name: "Jai Reddy",
                 designation: "Photographer & Visual Artist",
-                src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3"
+                src: "https://picsum.photos/1000/1000?random=201"
               },
               {
                 quote: "Every photograph tells a story. In black and white, that story becomes universal, timeless, and deeply personal.",
                 name: "Jai Reddy",
                 designation: "Photographer & Visual Artist",
-                src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3"
+                src: "https://picsum.photos/1000/1000?random=202"
               },
               {
                 quote: "The absence of color forces the viewer to see beyond the surface, to understand the geometry, texture, and emotion that truly define a moment.",
                 name: "Jai Reddy",
                 designation: "Photographer & Visual Artist",
-                src: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3"
+                src: "https://picsum.photos/1000/1000?random=203"
               },
             ]}
             theme={theme}

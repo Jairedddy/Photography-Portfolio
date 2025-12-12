@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import { useScrollGrain } from './hooks/useScrollGrain';
+import { useLenis } from './hooks/useLenis';
 import ScrollProgressBar from './components/ScrollProgressBar';
 import PageTransition from './components/PageTransition';
 import TransitionGrain from './components/TransitionGrain';
@@ -14,6 +15,7 @@ const App: React.FC = () => {
   // Default theme set to MONOCHROME as requested
   const [theme, setTheme] = useState<Theme>(Theme.MONOCHROME);
 
+  useLenis();
   const toggleTheme = () => {
     setTheme(prev => prev === Theme.VIBRANT ? Theme.MONOCHROME : Theme.VIBRANT);
   };

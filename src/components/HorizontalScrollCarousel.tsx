@@ -32,7 +32,7 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [sectionHeight, setSectionHeight] = useState(0);
 
   // Motion values for smooth animations
   const scrollX = useMotionValue(0);
@@ -52,39 +52,66 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Calculate section height dynamically based on viewport and horizontal scroll distance
+  useEffect(() => {
+    if (isMobile || !containerRef.current) return;
+
+    const calculateHeight = () => {
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      const containerWidth = PORTRAIT_PHOTOS.length * PHOTO_SPACING;
+      const maxHorizontalScroll = Math.max(0, containerWidth - viewportWidth);
+      
+      // Section height = viewport height (for locking) + horizontal scroll distance (for scrolling)
+      const requiredHeight = viewportHeight + maxHorizontalScroll;
+      setSectionHeight(requiredHeight);
+    };
+
+    calculateHeight();
+    window.addEventListener('resize', calculateHeight);
+    return () => window.removeEventListener('resize', calculateHeight);
+  }, [isMobile]);
+
   // Handle scroll and sticky positioning
   useEffect(() => {
-    if (!sectionRef.current || isMobile) return;
+    if (!sectionRef.current || isMobile || !containerRef.current) return;
 
-    const updateScroll = () => {
+    const updateScroll = (virtualScrollY?: number) => {
       const section = sectionRef.current;
-      if (!section) return;
+      const container = containerRef.current;
+      if (!section || !container) return;
 
       const rect = section.getBoundingClientRect();
-      const sectionTop = rect.top;
       const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      const sectionTop = rect.top;
+      const sectionBottom = rect.bottom;
       const sectionStart = section.offsetTop;
-      const sectionHeight = section.offsetHeight;
-      const currentScrollY = window.scrollY;
       
-      // Section becomes sticky when its top reaches the viewport top
-      // Trigger sticky when section top is at or above viewport top
-      const stickyTriggerPoint = sectionStart;
-      // Use the full section height minus viewport for scrollable area
-      const scrollableHeight = Math.max(1, sectionHeight - viewportHeight);
+      // Calculate horizontal scroll distance needed
+      const containerWidth = PORTRAIT_PHOTOS.length * PHOTO_SPACING;
+      const maxHorizontalScroll = Math.max(0, containerWidth - viewportWidth);
       
-      // Calculate progress (0 to 1) based on scroll position
+      const currentScrollY = typeof virtualScrollY === 'number' ? virtualScrollY : window.scrollY;
+      
+      // Lock point: Section is fully locked when:
+      // 1. Section top has reached viewport top (sectionTop <= 0)
+      // 2. Section bottom is still at or above viewport bottom (sectionBottom >= viewportHeight)
+      // This ensures the section is 100% in viewport before scrolling starts
+      const isFullyLocked = sectionTop <= 0 && sectionBottom >= viewportHeight;
+      
+      // Calculate progress only when fully locked
       let progress = 0;
       let shouldBeSticky = false;
       
-      // Check if section top has reached or passed viewport top
-      if (sectionTop <= 0 && sectionTop + sectionHeight > 0) {
+      if (isFullyLocked) {
         shouldBeSticky = true;
-        // Calculate progress based on how much we've scrolled past the trigger
-        const scrolledPastTrigger = Math.max(0, currentScrollY - stickyTriggerPoint);
-        progress = Math.min(1, scrolledPastTrigger / scrollableHeight);
-      } else if (currentScrollY > stickyTriggerPoint + scrollableHeight) {
-        // Section is fully scrolled past
+        // Calculate how much we've scrolled past the lock point
+        const scrollPastLock = Math.max(0, currentScrollY - sectionStart);
+        // Progress is based on how much we've scrolled relative to the horizontal distance needed
+        progress = Math.min(1, scrollPastLock / maxHorizontalScroll);
+      } else if (sectionTop < 0 && sectionBottom < viewportHeight) {
+        // Section is past the viewport - maintain sticky state and max progress
         shouldBeSticky = true;
         progress = 1;
       }
@@ -93,62 +120,40 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
         setIsSticky(shouldBeSticky);
       }
 
-      if (shouldBeSticky && progress >= 0) {
-        const container = containerRef.current;
-        if (container) {
-          const containerWidth = PORTRAIT_PHOTOS.length * PHOTO_SPACING;
-          const viewportWidth = window.innerWidth;
-          const maxScroll = Math.max(0, containerWidth - viewportWidth);
-          
-          // Map vertical scroll progress to horizontal position (1:1 ratio)
-          const targetX = progress * maxScroll;
-          
-          // Use spring animation for smooth movement
-          scrollX.set(targetX);
-          setScrollProgress(progress);
-        }
-      } else if (progress === 0) {
+      if (shouldBeSticky) {
+        // Map vertical scroll progress to horizontal position
+        const targetX = progress * maxHorizontalScroll;
+        scrollX.set(targetX);
+      } else {
+        // Reset when not locked
         scrollX.set(0);
-        setScrollProgress(0);
       }
     };
+
+    const lenis = (window as Window & { __lenis?: { on?: (event: string, cb: (e: any) => void) => void; off?: (event: string, cb: (e: any) => void) => void; } }).__lenis;
+    const handleLenisScroll = (e: { scroll?: number }) => updateScroll(e?.scroll);
+    const handleWindowScroll = () => updateScroll();
+    const handleResize = () => updateScroll();
 
     updateScroll();
-    window.addEventListener('scroll', updateScroll, { passive: true });
-    window.addEventListener('resize', updateScroll);
+
+    if (lenis?.on) {
+      lenis.on('scroll', handleLenisScroll);
+    } else {
+      window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    }
+
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('scroll', updateScroll);
-      window.removeEventListener('resize', updateScroll);
-    };
-  }, [isSticky, isMobile, scrollX]);
-
-  // Calculate which photo is in focus (closest to center of viewport)
-  const getFocusIndex = (): number => {
-    const container = containerRef.current;
-    if (!container) return 0;
-    
-    const viewportWidth = window.innerWidth;
-    const viewportCenter = viewportWidth / 2;
-    const currentX = scrollX.get();
-    
-    // Find which photo is closest to viewport center
-    let closestIndex = 0;
-    let minDistance = Infinity;
-    
-    PORTRAIT_PHOTOS.forEach((_, index) => {
-      const photoLeft = index * PHOTO_SPACING - currentX;
-      const photoCenter = photoLeft + 250; // 500px / 2
-      const distance = Math.abs(viewportCenter - photoCenter);
-      
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = index;
+      if (lenis?.off) {
+        lenis.off('scroll', handleLenisScroll);
+      } else {
+        window.removeEventListener('scroll', handleWindowScroll);
       }
-    });
-    
-    return closestIndex;
-  };
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isMobile, isSticky, scrollX, sectionHeight]);
 
   // Theme-aware styles
   const isMonochrome = theme === Theme.MONOCHROME;
@@ -162,9 +167,6 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
         className="relative py-20 px-6"
       >
         <div className="max-w-2xl mx-auto">
-          <h2 className={`text-3xl md:text-4xl serif mb-12 text-center ${isMonochrome ? 'text-white' : 'text-black'}`}>
-            Personal Gallery
-          </h2>
           <div className="space-y-8">
             {PORTRAIT_PHOTOS.map((photo, index) => (
               <motion.div
@@ -191,21 +193,13 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
     );
   }
 
-  // Calculate section height - need enough height for horizontal scroll
-  // 7 photos × 400px spacing = 2800px, minus viewport width
-  // With 1:1 scroll ratio, we need roughly that much vertical scroll
-  const containerWidth = PORTRAIT_PHOTOS.length * PHOTO_SPACING;
-  const estimatedViewportWidth = 1920; // Estimate for calculation
-  const horizontalScrollDistance = Math.max(0, containerWidth - estimatedViewportWidth);
-  const sectionHeightVh = Math.max(200, (horizontalScrollDistance / 1080) * 100 + 100);
-
   return (
     <section
       ref={sectionRef}
       className="relative"
       style={{ 
-        height: `${sectionHeightVh}vh`,
-        minHeight: '90vh',
+        height: sectionHeight > 0 ? `${sectionHeight}px` : '100vh',
+        minHeight: '100vh',
       }}
     >
       
@@ -219,14 +213,6 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
           paddingRight: '5%',
         }}
       >
-
-        {/* Title */}
-        <div className="absolute top-12 left-1/2 transform -translate-x-1/2 z-10">
-          <h2 className={`text-3xl md:text-4xl serif ${isMonochrome ? 'text-white' : 'text-black'}`}>
-            Personal Gallery
-          </h2>
-        </div>
-
         {/* Horizontal scroll container */}
         <div
           ref={containerRef}

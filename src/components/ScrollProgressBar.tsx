@@ -9,20 +9,46 @@ const ScrollProgressBar: React.FC<ScrollProgressBarProps> = ({ theme }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const updateProgress = (virtualScrollY?: number) => {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      
+      // Use Lenis virtual scroll if available, otherwise fall back to native scroll
+      const scrollTop = typeof virtualScrollY === 'number' 
+        ? virtualScrollY 
+        : window.scrollY || document.documentElement.scrollTop;
+      
       const scrollableHeight = documentHeight - windowHeight;
       const progress = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0;
       setScrollProgress(progress);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial calculation
+    // Try to use Lenis first
+    const lenis = (window as Window & { 
+      __lenis?: { 
+        on?: (event: string, cb: (e: any) => void) => void; 
+        off?: (event: string, cb: (e: any) => void) => void; 
+      } 
+    }).__lenis;
+    
+    const handleLenisScroll = (e: { scroll?: number }) => updateProgress(e?.scroll);
+    const handleWindowScroll = () => updateProgress();
+
+    // Initial calculation
+    updateProgress();
+
+    if (lenis?.on) {
+      lenis.on('scroll', handleLenisScroll);
+    } else {
+      window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    }
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      if (lenis?.off) {
+        lenis.off('scroll', handleLenisScroll);
+      } else {
+        window.removeEventListener('scroll', handleWindowScroll);
+      }
     };
   }, []);
 
@@ -36,9 +62,10 @@ const ScrollProgressBar: React.FC<ScrollProgressBarProps> = ({ theme }) => {
       }}
     >
       <div
-        className="h-full transition-all duration-150 ease-out"
+        className="h-full"
         style={{
           width: `${scrollProgress}%`,
+          transition: 'width 0.1s linear',
           background: theme === Theme.VIBRANT
             ? 'linear-gradient(90deg, #9333ea, #ec4899, #f97316, #3b82f6, #10b981, #eab308)'
             : 'linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4))',
