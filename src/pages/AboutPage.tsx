@@ -37,19 +37,25 @@ const AboutPage: React.FC<AboutPageProps> = ({ theme, toggleTheme }) => {
               style={quoteHeadingAnimation.style}
               className={`text-4xl md:text-6xl serif leading-tight ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}
             >
-              "Color describes an object. Black and white describes the subject."
+              {theme === Theme.VIBRANT 
+                ? "Colour captures the subject"
+                : "Monochrome captures the soul"
+              }
             </h2>
             
             <p className={`text-lg md:text-xl leading-relaxed font-light max-w-3xl mx-auto ${theme === Theme.VIBRANT ? 'text-gray-600' : 'text-neutral-400'}`}>
-              Jai Reddy is a digital exploration of light and void. By removing color, we remove distraction, 
-              forcing the eye to recognize the fundamental truths of shape, texture, and emotion.
+              {theme === Theme.VIBRANT 
+                ? "By embracing color, we celebrate life, inviting the eye to discover the vibrant truths of hue, saturation, and emotion."
+                : "By removing color, we remove distraction, forcing the eye to recognize the fundamental truths of shape, texture, and stoic silence."
+              }
             </p>
 
             <div className="pt-8 space-y-6">
               <p className={`text-base leading-relaxed ${theme === Theme.VIBRANT ? 'text-gray-600' : 'text-neutral-400'}`}>
-                Through the lens of monochrome photography, each frame becomes a study in contrast, 
-                a meditation on the spaces between light and shadow. Every image tells a story 
-                stripped of the noise of color, revealing the essence of the moment.
+                {theme === Theme.VIBRANT
+                  ? "Through the lens of color photography, each frame becomes a celebration of vibrancy, a dance between complementary hues and saturated moments. Every image tells a story enriched by the language of color, revealing the full spectrum of life's beauty."
+                  : "Through the lens of monochrome photography, each frame becomes a study in contrast, a meditation on the spaces between light and shadow. Every image tells a story stripped of the noise of color, revealing the essence of the moment."
+                }
               </p>
             </div>
           </div>

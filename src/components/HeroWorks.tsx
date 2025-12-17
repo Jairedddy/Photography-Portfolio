@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { useParallax } from '../hooks/useParallax';
 import { AnimatedWordFlip } from './ui/animated-word-flip';
 import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
+import ParallaxLayers from './ParallaxLayers';
 
 interface HeroWorksProps {
   theme: Theme;
@@ -376,8 +377,14 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
       </div>
 
       {/* Hero Section */}
-      <div className="relative h-screen flex flex-col justify-center items-center z-10">
-        <div className="relative z-10 text-center space-y-8 px-4 mix-blend-difference">
+      <div className="relative h-screen flex flex-col justify-center items-center z-10 overflow-hidden">
+        {/* 3D Parallax Layers Background */}
+        <ParallaxLayers
+          theme={theme}
+          className="absolute inset-0"
+        />
+        
+        <div className="relative z-10 text-center space-y-8 px-4 mix-blend-difference -translate-y-24 md:-translate-y-32">
           <p className={`text-sm md:text-base tracking-[0.5em] uppercase animate-[fadeIn_1.5s_ease-out_0.2s_forwards] opacity-0 ${
               theme === Theme.VIBRANT 
                 ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent' 
