@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useLayoutEffect, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useLayoutEffect, useState, useCallback, useMemo } from 'react';
 import { Photo, Theme } from '../types';
 import { X } from 'lucide-react';
 import LightboxNavigation from './LightboxNavigation';
+import { useSwipeGesture } from '../hooks/useSwipeGesture';
 
 interface PhotoModalProps {
   photo: Photo;
@@ -21,12 +22,9 @@ const PhotoModal: React.FC<PhotoModalProps> = ({
   onClose 
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const imageContainerRef = useRef<HTMLDivElement>(null);
   const [isClosing, setIsClosing] = useState(false);
   const [activeIndex, setActiveIndex] = useState(currentIndex);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
-  const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
   
   // Use photos array if provided, otherwise use single photo
   const photosArray = photos && photos.length > 0 ? photos : [photo];
@@ -170,45 +168,28 @@ const PhotoModal: React.FC<PhotoModalProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isClosing, isTransitioning, photos, handleClose, handlePrevious, handleNext]);
   
-  // Touch event handlers for swipe gestures
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (!photos || photos.length <= 1) return;
-    setTouchEnd(null);
-    setTouchStart({
-      x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY,
-    });
-  };
-  
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!photos || photos.length <= 1) return;
-    setTouchEnd({
-      x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY,
-    });
-  };
-  
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd || !photos || photos.length <= 1) return;
-    
-    const distanceX = touchStart.x - touchEnd.x;
-    const distanceY = touchStart.y - touchEnd.y;
-    const isLeftSwipe = distanceX > 50;
-    const isRightSwipe = distanceX < -50;
-    const isVerticalSwipe = Math.abs(distanceY) > Math.abs(distanceX);
-    
-    // Only handle horizontal swipes
-    if (!isVerticalSwipe) {
-      if (isLeftSwipe && activeIndex < photos.length - 1) {
+  const photoSwipe = useSwipeGesture({
+    axis: 'horizontal',
+    threshold: 30,
+    maxOffset: 220,
+    preventDefault: true,
+    enabled: photosArray.length > 1,
+    onSwipeLeft: () => {
+      if (activeIndex < photosArray.length - 1) {
         handleNext();
-      } else if (isRightSwipe && activeIndex > 0) {
+      }
+    },
+    onSwipeRight: () => {
+      if (activeIndex > 0) {
         handlePrevious();
       }
-    }
-    
-    setTouchStart(null);
-    setTouchEnd(null);
-  };
+    },
+  });
+
+  const swipeStyle = useMemo(() => ({
+    transform: `translate3d(${photoSwipe.offset.x}px, 0, 0)`,
+    transition: photoSwipe.isSwiping ? 'none' : 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
+  }), [photoSwipe.offset.x, photoSwipe.isSwiping]);
   
   // FLIP Open Animation
   useLayoutEffect(() => {
@@ -261,13 +242,13 @@ const PhotoModal: React.FC<PhotoModalProps> = ({
         
         {/* Image Container */}
         <div 
-          ref={imageContainerRef}
           className="flex-1 bg-black flex items-center justify-center relative overflow-hidden group"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          {...photoSwipe.bind}
         >
-          <div className="relative w-full h-full flex items-center justify-center">
+          <div 
+            className="relative w-full h-full flex items-center justify-center"
+            style={swipeStyle}
+          >
             <img 
               key={currentPhoto.id}
               src={currentPhoto.url} 

@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Photo, Theme } from '../types';
 import PhotoModal from './PhotoModal';
 import { ArrowRight } from 'lucide-react';
 import { useParallax } from '../hooks/useParallax';
 import { AnimatedWordFlip } from './ui/animated-word-flip';
 import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
+import { useSwipeGesture } from '../hooks/useSwipeGesture';
 
 interface HeroWorksProps {
   theme: Theme;
@@ -189,6 +190,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const [isGestureEnabled, setIsGestureEnabled] = useState(false);
   const [gridColumns, setGridColumns] = useState(3);
   const [scrollY, setScrollY] = useState(0);
   const [jaiReddyOffset, setJaiReddyOffset] = useState(80);
@@ -252,6 +254,49 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
     return () => window.removeEventListener('resize', updateGridColumns);
   }, []);
 
+  useEffect(() => {
+    const updateGestureState = () => {
+      setIsGestureEnabled(window.innerWidth < 1024);
+    };
+    updateGestureState();
+    window.addEventListener('resize', updateGestureState);
+    return () => window.removeEventListener('resize', updateGestureState);
+  }, []);
+
+  const scrollToHero = useCallback(() => {
+    const top = sectionRef.current?.offsetTop ?? 0;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }, []);
+
+  const scrollToWorks = useCallback(() => {
+    const worksSection = document.getElementById('works');
+    worksSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
+
+  const heroSwipe = useSwipeGesture({
+    axis: 'vertical',
+    threshold: 28,
+    preventDefault: true,
+    enabled: isGestureEnabled,
+    onSwipeUp: scrollToWorks,
+    onSwipeDown: scrollToHero,
+  });
+
+  const worksSwipe = useSwipeGesture({
+    axis: 'vertical',
+    threshold: 28,
+    preventDefault: false,
+    enabled: isGestureEnabled,
+    onSwipeDown: () => {
+      const worksSection = document.getElementById('works');
+      if (!worksSection) return;
+      const { top } = worksSection.getBoundingClientRect();
+      if (top >= -40) {
+        scrollToHero();
+      }
+    },
+  });
+
   // Advanced grid layout algorithm
   const calculateGridLayout = (photos: Photo[], columns: number) => {
     const layout: Array<{ photo: Photo; rowSpan: number; colSpan: number }> = [];
@@ -301,10 +346,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
   const handlePageChange = (page: number) => {
     clearFocus();
     setCurrentPage(page);
-    const gallerySection = document.getElementById('works');
-    if (gallerySection) {
-      gallerySection.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToWorks();
   };
 
   const clearFocus = () => {
@@ -399,7 +441,10 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
       </div>
 
       {/* Hero Section */}
-      <div className="relative h-screen flex flex-col justify-center items-center z-10 overflow-hidden">
+      <div 
+        className="relative h-screen flex flex-col justify-center items-center z-10 overflow-hidden"
+        {...heroSwipe.bind}
+      >
         <div className="relative z-10 text-center space-y-8 px-4 mix-blend-difference" style={{ transform: 'translateY(0)' }}>
           <p className={`text-sm md:text-base tracking-[0.5em] uppercase animate-[fadeIn_1.5s_ease-out_0.2s_forwards] opacity-0 ${
               theme === Theme.VIBRANT 
@@ -441,6 +486,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
       {/* Works Section */}
       <div 
         id="works"
+        {...worksSwipe.bind}
         className="relative py-20 px-4 md:px-8 overflow-hidden z-10"
         onClick={handleBackgroundClick}
       >

@@ -15,11 +15,9 @@ export function AnimatedWordFlip({
   wordClassName = ""
 }: AnimatedWordFlipProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [previousIndex, setPreviousIndex] = useState(0);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setPreviousIndex(currentIndex);
       if (currentIndex === words.length - 1) {
         setCurrentIndex(0);
       } else {
@@ -28,9 +26,6 @@ export function AnimatedWordFlip({
     }, interval);
     return () => clearTimeout(timeoutId);
   }, [currentIndex, words.length, interval]);
-
-  // Determine if we're moving forward (including loop from last to first)
-  const isMovingForward = currentIndex > previousIndex || (previousIndex === words.length - 1 && currentIndex === 0);
 
   return (
     <span className={`relative inline-block ${className}`} style={{ verticalAlign: 'baseline' }}>
