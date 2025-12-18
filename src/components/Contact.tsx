@@ -29,27 +29,6 @@ const Contact: React.FC<ContactProps> = ({ theme }) => {
             jaishukreddy7@gmail.com
           </a>
         </div>
-
-        <div className="pt-12 flex gap-8 text-sm opacity-60">
-          <a 
-            href="#" 
-            className={`hover:opacity-100 transition-opacity ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}
-          >
-            Instagram
-          </a>
-          <a 
-            href="#" 
-            className={`hover:opacity-100 transition-opacity ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}
-          >
-            Twitter
-          </a>
-          <a 
-            href="#" 
-            className={`hover:opacity-100 transition-opacity ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}
-          >
-            LinkedIn
-          </a>
-        </div>
       </div>
     </section>
   );

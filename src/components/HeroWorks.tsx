@@ -73,7 +73,7 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, parallaxSpeed }
   return (
     <div 
       ref={containerRef}
-      className="h-full w-full group relative overflow-hidden rounded-sm transition-all duration-500 hover:scale-[1.02]"
+      className="h-full w-full group relative overflow-hidden rounded-sm transition-all duration-500"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -103,7 +103,7 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, parallaxSpeed }
             onLoad={() => setIsLoaded(true)}
             className={`relative z-20 w-full h-full object-cover transition-all duration-700 ease-out transform will-change-transform rounded-sm ${
               theme === Theme.MONOCHROME ? 'grayscale' : ''
-            } ${isHovered ? 'scale-105' : 'scale-100'}`}
+            }`}
             style={{ objectFit: 'cover' }}
           />
         )}

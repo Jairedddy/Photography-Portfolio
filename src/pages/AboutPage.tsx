@@ -27,7 +27,11 @@ const AboutPage: React.FC<AboutPageProps> = ({ theme, toggleTheme }) => {
         className="relative min-h-screen flex flex-col justify-center items-center py-32 px-6"
       >
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-12 mb-20">
-          <span className={`inline-block text-xs font-bold tracking-[0.3em] uppercase py-2 border-b ${theme === Theme.VIBRANT ? 'text-gray-400 border-gray-200' : 'text-gray-500 border-neutral-800'}`}>
+          <span className={`inline-block text-xs font-bold tracking-[0.3em] uppercase py-2 border-b ${
+            theme === Theme.VIBRANT 
+              ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent border-gray-200' 
+              : 'text-gray-500 border-neutral-800'
+          }`}>
             The Artist
           </span>
           
@@ -35,7 +39,11 @@ const AboutPage: React.FC<AboutPageProps> = ({ theme, toggleTheme }) => {
             <h2
               ref={quoteHeadingAnimation.ref}
               style={quoteHeadingAnimation.style}
-              className={`text-4xl md:text-6xl serif leading-tight ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}
+              className={`text-4xl md:text-6xl serif leading-tight ${
+                theme === Theme.VIBRANT 
+                  ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent'
+                  : 'text-white'
+              }`}
             >
               {theme === Theme.VIBRANT 
                 ? "Colour captures the subject"
@@ -49,41 +57,55 @@ const AboutPage: React.FC<AboutPageProps> = ({ theme, toggleTheme }) => {
                 : "By removing color, we remove distraction, forcing the eye to recognize the fundamental truths of shape, texture, and stoic silence."
               }
             </p>
-
-            <div className="pt-8 space-y-6">
-              <p className={`text-base leading-relaxed ${theme === Theme.VIBRANT ? 'text-gray-600' : 'text-neutral-400'}`}>
-                {theme === Theme.VIBRANT
-                  ? "Through the lens of color photography, each frame becomes a celebration of vibrancy, a dance between complementary hues and saturated moments. Every image tells a story enriched by the language of color, revealing the full spectrum of life's beauty."
-                  : "Through the lens of monochrome photography, each frame becomes a study in contrast, a meditation on the spaces between light and shadow. Every image tells a story stripped of the noise of color, revealing the essence of the moment."
-                }
-              </p>
-            </div>
           </div>
         </div>
 
         {/* Portrait Carousel */}
         <div className="w-full">
           <AnimatedTestimonials 
-            testimonials={[
-              {
-                quote: "Capturing moments in monochrome allows me to focus on the essence of composition, light, and emotion without the distraction of color.",
-                name: "Jai Reddy",
-                designation: "Photographer & Visual Artist",
-                src: "https://picsum.photos/1000/1000?random=201"
-              },
-              {
-                quote: "Every photograph tells a story. In black and white, that story becomes universal, timeless, and deeply personal.",
-                name: "Jai Reddy",
-                designation: "Photographer & Visual Artist",
-                src: "https://picsum.photos/1000/1000?random=202"
-              },
-              {
-                quote: "The absence of color forces the viewer to see beyond the surface, to understand the geometry, texture, and emotion that truly define a moment.",
-                name: "Jai Reddy",
-                designation: "Photographer & Visual Artist",
-                src: "https://picsum.photos/1000/1000?random=203"
-              },
-            ]}
+            testimonials={
+              theme === Theme.VIBRANT
+                ? [
+                    {
+                      quote: "Color breathes life into every frame, transforming ordinary moments into vibrant narratives that celebrate the richness of our visual world.",
+                      name: "Jai Reddy",
+                      designation: "Photographer & Visual Artist",
+                      src: "https://picsum.photos/1000/1000?random=201"
+                    },
+                    {
+                      quote: "Through the lens of color, I capture the emotional spectrum of human experience—from the warm embrace of golden hour to the cool serenity of twilight.",
+                      name: "Jai Reddy",
+                      designation: "Photographer & Visual Artist",
+                      src: "https://picsum.photos/1000/1000?random=202"
+                    },
+                    {
+                      quote: "Every hue tells a story. Color photography allows me to paint with light, creating compositions that resonate with the vibrant energy of life itself.",
+                      name: "Jai Reddy",
+                      designation: "Photographer & Visual Artist",
+                      src: "https://picsum.photos/1000/1000?random=203"
+                    },
+                  ]
+                : [
+                    {
+                      quote: "Capturing moments in monochrome allows me to focus on the essence of composition, light, and emotion without the distraction of color.",
+                      name: "Jai Reddy",
+                      designation: "Photographer & Visual Artist",
+                      src: "https://picsum.photos/1000/1000?random=201"
+                    },
+                    {
+                      quote: "Every photograph tells a story. In black and white, that story becomes universal, timeless, and deeply personal.",
+                      name: "Jai Reddy",
+                      designation: "Photographer & Visual Artist",
+                      src: "https://picsum.photos/1000/1000?random=202"
+                    },
+                    {
+                      quote: "The absence of color forces the viewer to see beyond the surface, to understand the geometry, texture, and emotion that truly define a moment.",
+                      name: "Jai Reddy",
+                      designation: "Photographer & Visual Artist",
+                      src: "https://picsum.photos/1000/1000?random=203"
+                    },
+                  ]
+            }
             theme={theme}
             autoplay={false}
           />
