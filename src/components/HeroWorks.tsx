@@ -349,7 +349,9 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
             <h2
               ref={heroHeadingAnimation.ref}
               style={heroHeadingAnimation.style}
-              className={`text-6xl md:text-9xl font-light serif leading-tight animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0 inline-flex items-center justify-center gap-2 ${
+              className={`text-6xl md:text-9xl font-light serif ${
+                theme === Theme.VIBRANT ? 'leading-[1.12] pb-[2px]' : 'leading-tight'
+              } animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0 inline-flex items-center justify-center gap-2 ${
               theme === Theme.VIBRANT
                 ? ''
                 : 'text-white'
@@ -362,12 +364,12 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
                 }
                 interval={2500}
                 wordClassName={theme === Theme.VIBRANT 
-                  ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent' 
+                  ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent leading-[1.12] pb-[2px]'
                   : ''
                 }
               />
               <span className={theme === Theme.VIBRANT 
-                ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent' 
+                ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent leading-[1.12] pb-[2px]' 
                 : ''}>{theme === Theme.VIBRANT ? 'Color' : 'Silence'}</span>
             </h2>
           </div>

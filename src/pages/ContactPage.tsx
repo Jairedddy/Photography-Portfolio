@@ -148,13 +148,17 @@ const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
             <h2
               ref={contactHeadingAnimation.ref}
               style={contactHeadingAnimation.style}
-              className={`text-4xl md:text-6xl serif italic mb-4 ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}
+              className={`text-4xl md:text-6xl serif italic mb-4 ${
+                theme === Theme.VIBRANT 
+                  ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent leading-[1.12] pb-[2px]'
+                  : 'text-white'
+              }`}
             >
               Let's Create
             </h2>
             
             <p className={`text-sm md:text-base leading-relaxed font-light max-w-xl ${theme === Theme.VIBRANT ? 'text-gray-600' : 'text-neutral-400'}`}>
-              Interested in collaborating? Fill out the form below.
+              Interested in collaborating? 
             </p>
           </div>
 

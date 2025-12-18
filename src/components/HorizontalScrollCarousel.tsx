@@ -204,13 +204,14 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
     >
       
       <div
-        className={`sticky top-0 flex items-center overflow-hidden ${
+        className={`sticky top-20 flex items-center overflow-hidden ${
           isSticky ? 'transition-all duration-500 ease-out' : ''
         }`}
         style={{
-          height: '90vh',
+          height: 'calc(90vh - 5rem)',
           paddingLeft: '5%',
           paddingRight: '5%',
+          paddingTop: '2rem',
         }}
       >
         {/* Horizontal scroll container */}
