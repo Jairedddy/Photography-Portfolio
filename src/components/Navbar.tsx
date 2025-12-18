@@ -153,7 +153,6 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
               <Link 
                 to="/contact"
                 className="block"
-                onClick={(event) => handleInPageNavigation(event, 'footer')}
               >
                 <TextScramble 
                   text="CONTACT" 
