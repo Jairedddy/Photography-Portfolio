@@ -25,7 +25,7 @@ export const useLenis = (options?: LenisOptions) => {
 
     const lenis = new Lenis({
       duration: 1.1,
-      smoothWheel: true,
+      smoothWheel: false, // Disable smooth scrolling for better performance and immediate scroll updates
       lerp: 0.1,
       ...options,
     });
