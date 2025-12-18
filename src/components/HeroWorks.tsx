@@ -5,7 +5,6 @@ import { ArrowRight } from 'lucide-react';
 import { useParallax } from '../hooks/useParallax';
 import { AnimatedWordFlip } from './ui/animated-word-flip';
 import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
-import ParallaxLayers from './ParallaxLayers';
 
 interface HeroWorksProps {
   theme: Theme;
@@ -192,6 +191,8 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const [gridColumns, setGridColumns] = useState(3);
   const [scrollY, setScrollY] = useState(0);
+  const [jaiReddyOffset, setJaiReddyOffset] = useState(80);
+  const [jaiReddyTop, setJaiReddyTop] = useState('50vh');
   const heroHeadingAnimation = useTypographyAnimation<HTMLHeadingElement>({
     intensity: 0.12,
     letterSpacingRange: 0.05,
@@ -210,6 +211,27 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Adjust JAI REDDY offset and top position based on screen size
+  useEffect(() => {
+    const updateOffset = () => {
+      // For screens smaller than 1536px (laptops), use negative offset to move up
+      // and adjust top position to account for navbar
+      if (window.innerWidth < 1536) {
+        setJaiReddyOffset(-40);
+        // Move top position up to account for navbar (h-20 = 80px) and add some margin
+        setJaiReddyTop('calc(50vh - 40px)');
+      } else {
+        // For larger screens (monitors), use original values
+        setJaiReddyOffset(80);
+        setJaiReddyTop('50vh');
+      }
+    };
+
+    updateOffset();
+    window.addEventListener('resize', updateOffset);
+    return () => window.removeEventListener('resize', updateOffset);
   }, []);
 
   // Calculate optimal grid columns based on viewport
@@ -362,9 +384,9 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
       <div 
         className="fixed w-full text-center select-none pointer-events-none"
         style={{ 
-          transform: `translate(-50%, calc(-50vh + ${scrollY * 0.6}px + 80px)) scale(${Math.min(3, 0.7 + scrollY * 0.0015)})`,
+          transform: `translate(-50%, calc(-50% + ${scrollY * 0.6}px + ${jaiReddyOffset}px)) scale(${Math.min(3, 0.7 + scrollY * 0.0015)})`,
           opacity: Math.max(0, 0.03 - scrollY * 0.00004),
-          top: '50vh',
+          top: jaiReddyTop,
           left: '50%',
           transformOrigin: 'center center',
           zIndex: 0,
@@ -378,13 +400,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
 
       {/* Hero Section */}
       <div className="relative h-screen flex flex-col justify-center items-center z-10 overflow-hidden">
-        {/* 3D Parallax Layers Background */}
-        <ParallaxLayers
-          theme={theme}
-          className="absolute inset-0"
-        />
-        
-        <div className="relative z-10 text-center space-y-8 px-4 mix-blend-difference -translate-y-24 md:-translate-y-32">
+        <div className="relative z-10 text-center space-y-8 px-4 mix-blend-difference" style={{ transform: 'translateY(0)' }}>
           <p className={`text-sm md:text-base tracking-[0.5em] uppercase animate-[fadeIn_1.5s_ease-out_0.2s_forwards] opacity-0 ${
               theme === Theme.VIBRANT 
                 ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent' 
@@ -393,11 +409,11 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
             World Through My Eyes (and Camera)
           </p>
           
-          <div className="overflow-visible">
+          <div className="overflow-visible flex items-center justify-center">
             <h2
               ref={heroHeadingAnimation.ref}
               style={heroHeadingAnimation.style}
-              className={`text-6xl md:text-9xl font-light serif leading-tight animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0 inline-flex items-baseline justify-center gap-2 ${
+              className={`text-6xl md:text-9xl font-light serif leading-tight animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0 inline-flex items-center justify-center gap-2 ${
               theme === Theme.VIBRANT
                 ? ''
                 : 'text-white'
