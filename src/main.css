@@ -91,6 +91,8 @@ html {
 /* Ensure no horizontal overflow */
 body {
   overflow-x: hidden;
+  scroll-snap-type: y proximity;
+  scroll-behavior: auto;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -153,4 +155,15 @@ html, body, *, *::before, *::after {
 .monochrome-theme ::-moz-selection {
   background-color: rgba(255, 255, 255, 0.2);
   color: inherit;
+}
+
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
+  body {
+    scroll-snap-type: none;
+  }
 }

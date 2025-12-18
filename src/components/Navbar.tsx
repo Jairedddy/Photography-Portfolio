@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, MouseEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Theme } from '../types';
 import { Sun, Moon } from 'lucide-react';
 import { TextScramble } from './ui/text-scramble';
+import { smoothScroll } from '../utils/smoothScroll';
 
 interface NavbarProps {
   theme: Theme;
@@ -13,6 +14,15 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const location = useLocation();
+  const isHome = location.pathname === '/';
+  const sectionScrollConfig: Record<
+    'hero' | 'works' | 'footer',
+    { duration: number; easing: 'easeInOutCubic' | 'easeOutExpo'; offset: number }
+  > = {
+    hero: { duration: 850, easing: 'easeOutExpo', offset: -90 },
+    works: { duration: 1100, easing: 'easeInOutCubic', offset: -60 },
+    footer: { duration: 1300, easing: 'easeOutExpo', offset: -40 },
+  };
   
   useEffect(() => {
     const handleScrollListener = () => {
@@ -37,6 +47,24 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const borderOpacity = isScrolled ? Math.min(1, scrollProgress) : 0;
   const paddingY = isScrolled ? 0 : 16;
   const shadowOpacity = isScrolled ? Math.min(0.15, scrollProgress * 0.15) : 0;
+
+  const handleInPageNavigation = (
+    event: MouseEvent,
+    targetId: 'hero' | 'works' | 'footer'
+  ) => {
+    if (!isHome || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || event.button !== 0) {
+      return;
+    }
+
+    const sectionId = targetId === 'hero' ? '#hero' : targetId === 'footer' ? '#footer' : '#works';
+    const config = sectionScrollConfig[targetId];
+    const target = typeof document !== 'undefined' ? document.querySelector(sectionId) : null;
+
+    if (target) {
+      event.preventDefault();
+      smoothScroll(target as HTMLElement, config);
+    }
+  };
 
   return (
     <nav 
@@ -65,6 +93,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
         <Link 
           to="/"
           className="flex items-center gap-3 group cursor-pointer"
+          onClick={(event) => handleInPageNavigation(event, 'hero')}
         >
           <span className={`text-xl tracking-widest font-bold uppercase transition-all duration-300 group-hover:tracking-[0.3em] ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
             JR
@@ -77,6 +106,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
               <Link 
                 to="/"
                 className="block"
+                onClick={(event) => handleInPageNavigation(event, 'works')}
               >
                 <TextScramble 
                   text="WORKS" 
@@ -123,6 +153,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
               <Link 
                 to="/contact"
                 className="block"
+                onClick={(event) => handleInPageNavigation(event, 'footer')}
               >
                 <TextScramble 
                   text="CONTACT" 

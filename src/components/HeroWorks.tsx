@@ -6,6 +6,7 @@ import { useParallax } from '../hooks/useParallax';
 import { AnimatedWordFlip } from './ui/animated-word-flip';
 import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
 import { useSwipeGesture } from '../hooks/useSwipeGesture';
+import { smoothScroll } from '../utils/smoothScroll';
 
 interface HeroWorksProps {
   theme: Theme;
@@ -264,13 +265,11 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
   }, []);
 
   const scrollToHero = useCallback(() => {
-    const top = sectionRef.current?.offsetTop ?? 0;
-    window.scrollTo({ top, behavior: 'smooth' });
+    smoothScroll('#hero', { duration: 900, easing: 'easeOutExpo', offset: -80 });
   }, []);
 
   const scrollToWorks = useCallback(() => {
-    const worksSection = document.getElementById('works');
-    worksSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    smoothScroll('#works', { duration: 1100, easing: 'easeInOutCubic', offset: -40 });
   }, []);
 
   const heroSwipe = useSwipeGesture({
@@ -442,7 +441,10 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
 
       {/* Hero Section */}
       <div 
-        className="relative h-screen flex flex-col justify-center items-center z-10 overflow-hidden"
+        id="hero"
+        data-scroll-section="hero"
+        data-scroll-label="Intro"
+        className="relative h-screen flex flex-col justify-center items-center z-10 overflow-hidden snap-section"
         {...heroSwipe.bind}
       >
         <div className="relative z-10 text-center space-y-8 px-4 mix-blend-difference" style={{ transform: 'translateY(0)' }}>
@@ -486,8 +488,10 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
       {/* Works Section */}
       <div 
         id="works"
+        data-scroll-section="works"
+        data-scroll-label="Gallery"
+        className="relative py-20 px-4 md:px-8 overflow-hidden z-10 snap-section"
         {...worksSwipe.bind}
-        className="relative py-20 px-4 md:px-8 overflow-hidden z-10"
         onClick={handleBackgroundClick}
       >
         <div className="max-w-7xl mx-auto relative z-10">

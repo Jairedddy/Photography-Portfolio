@@ -26,9 +26,12 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
 
   return (
     <footer 
+      id="footer"
+      data-scroll-section="footer"
+      data-scroll-label="Contact"
+      className="snap-section py-12 border-t transition-colors duration-500 overflow-hidden relative"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="py-12 border-t transition-colors duration-500 overflow-hidden relative"
       style={{
         backgroundColor: 'transparent',
       }}

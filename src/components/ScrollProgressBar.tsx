@@ -54,11 +54,11 @@ const ScrollProgressBar: React.FC<ScrollProgressBarProps> = ({ theme }) => {
 
   return (
     <div 
-      className="fixed top-0 left-0 right-0 h-1 z-[10000] pointer-events-none"
+      className="fixed top-0 left-0 right-0 h-1.5 z-[10000] pointer-events-none"
       style={{
         background: theme === Theme.VIBRANT
           ? 'linear-gradient(90deg, rgba(147, 51, 234, 0.2), rgba(236, 72, 153, 0.2), rgba(249, 115, 22, 0.2), rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.2), rgba(234, 179, 8, 0.2))'
-          : 'rgba(255, 255, 255, 0.1)'
+          : 'rgba(255, 255, 255, 0.08)'
       }}
     >
       <div
