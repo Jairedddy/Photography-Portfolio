@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Photo, Theme } from '../types';
-import PhotoModal from './PhotoModal';
-import { ArrowRight } from 'lucide-react';
 import { useParallax } from '../hooks/useParallax';
 import { AnimatedWordFlip } from './ui/animated-word-flip';
 import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
@@ -39,22 +37,15 @@ const ITEMS_PER_PAGE = 6;
 interface GalleryItemProps {
   photo: Photo;
   theme: Theme;
-  isFocused: boolean;
-  isExiting: boolean;
-  isAnyFocused: boolean;
   parallaxSpeed: number;
-  onClick: (photo: Photo, rect: DOMRect) => void;
-  onViewDetails: (photo: Photo, rect: DOMRect) => void;
 }
 
-const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isExiting, isAnyFocused, parallaxSpeed, onClick, onViewDetails }) => {
+const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, parallaxSpeed }) => {
   const [isInView, setIsInView] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const parallax = useParallax<HTMLDivElement>(parallaxSpeed);
-
-  // Determine if this specific item should fade into background
-  const isBackground = isAnyFocused && !isFocused;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -82,21 +73,9 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
   return (
     <div 
       ref={containerRef}
-      className={`h-full w-full group relative cursor-pointer overflow-hidden rounded-sm transition-all duration-700 ease-[cubic-bezier(0.2,1,0.3,1)] ${
-        (isFocused || isExiting) ? 'z-50' : ''
-      } ${
-        isFocused 
-          ? 'scale-[1.03]' 
-          : isBackground
-            ? 'scale-95 opacity-20 blur-[2px] grayscale pointer-events-none'
-            : ''
-      }`}
-      onClick={(e) => {
-        e.stopPropagation();
-        if (!isBackground) {
-            onClick(photo, e.currentTarget.getBoundingClientRect());
-        }
-      }}
+      className="h-full w-full group relative overflow-hidden rounded-sm transition-all duration-500 hover:scale-[1.02]"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div
         ref={parallax.ref}
@@ -122,59 +101,42 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
             src={photo.url} 
             alt={photo.title}
             onLoad={() => setIsLoaded(true)}
-            className={`relative z-20 w-full h-full object-cover transition-all duration-1000 ease-out transform will-change-transform rounded-sm ${
-              isFocused 
-                ? `scale-105 blur-[2px] opacity-60 ${theme === Theme.MONOCHROME ? 'grayscale sepia-[.2] hue-rotate-[200deg]' : ''}` 
-                : isBackground 
-                  ? `scale-100 ${theme === Theme.MONOCHROME ? 'grayscale' : ''}` 
-                  : `${theme === Theme.MONOCHROME ? 'grayscale' : ''}`
-            }`}
+            className={`relative z-20 w-full h-full object-cover transition-all duration-700 ease-out transform will-change-transform rounded-sm ${
+              theme === Theme.MONOCHROME ? 'grayscale' : ''
+            } ${isHovered ? 'scale-105' : 'scale-100'}`}
             style={{ objectFit: 'cover' }}
           />
         )}
         
-        {/* Overlay */}
-        <div className={`absolute inset-0 z-30 transition-all duration-500 flex flex-col p-6 ${
-          isFocused 
-            ? 'opacity-100 bg-black/50 justify-center items-center' 
-            : isBackground 
-              ? 'opacity-0'
-              : 'opacity-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent justify-end'
+        {/* Hover Overlay */}
+        <div className={`absolute inset-0 z-30 transition-all duration-500 flex flex-col p-6 justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent ${
+          isHovered ? 'opacity-100' : 'opacity-0'
         }`}>
-          <div className={`transform transition-all duration-500 ease-out w-full flex flex-col ${
-            isFocused 
-              ? 'translate-y-0 items-center' 
-              : 'translate-y-4 items-start'
-          }`}>
-            
-            <p className={`serif italic tracking-wide text-white transition-all duration-500 text-center ${
-              isFocused ? 'text-3xl mb-3 scale-105' : 'text-xl md:text-2xl text-left'
-            }`}>
+          <div className={`transform transition-all duration-500 ease-out ${isHovered ? 'translate-y-0' : 'translate-y-4'}`}>
+            {/* Title */}
+            <p className="serif italic tracking-wide text-white text-2xl md:text-3xl mb-3">
               {photo.title}
             </p>
             
-            <div className={`flex items-center gap-3 mt-2 transition-all duration-500 ${isFocused ? 'justify-center opacity-80' : 'justify-start'}`}>
-              <span className={`h-[1px] bg-white/60 transition-all duration-500 ${isFocused ? 'w-12' : 'w-6'}`}></span>
-              <p className="text-white/90 text-[10px] md:text-xs uppercase tracking-[0.2em]">{photo.category}</p>
-              {isFocused && <span className="h-[1px] w-12 bg-white/60"></span>}
+            {/* Category */}
+            <div className="flex items-center gap-3 mb-4">
+              <span className="h-[1px] w-8 bg-white/60"></span>
+              <p className="text-white/90 text-xs uppercase tracking-[0.2em]">{photo.category}</p>
             </div>
 
-            {/* View Project Button */}
-            <div className={`overflow-hidden transition-all duration-700 delay-100 ${isFocused ? 'max-h-20 opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (containerRef.current) {
-                    onViewDetails(photo, containerRef.current.getBoundingClientRect());
-                  }
-                }}
-                className="flex items-center gap-3 text-white text-[10px] font-bold tracking-[0.3em] uppercase border border-white/30 px-5 py-2 rounded-full bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/50 transition-all cursor-pointer"
-              >
-                <span>View</span>
-                <ArrowRight size={12} />
-              </button>
-            </div>
+            {/* Description */}
+            <p className="text-white/80 text-sm leading-relaxed mb-4">
+              {photo.description || "A captivating moment frozen in time. This piece explores the interplay of light, shadow, and composition, revealing the beauty in everyday scenes."}
+            </p>
 
+            {/* Details */}
+            <div className="flex items-center gap-6 text-white/60 text-xs uppercase tracking-wider">
+              <span>ISO 400</span>
+              <span className="w-1 h-1 rounded-full bg-white/30"></span>
+              <span>35mm</span>
+              <span className="w-1 h-1 rounded-full bg-white/30"></span>
+              <span>f/2.8</span>
+            </div>
           </div>
         </div>
       </div>
@@ -183,12 +145,7 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, isFocused, isEx
 };
 
 const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-  const [focusedPhotoId, setFocusedPhotoId] = useState<string | null>(null);
-  const [exitingPhotoId, setExitingPhotoId] = useState<string | null>(null);
-  const [originRect, setOriginRect] = useState<DOMRect | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [isGestureEnabled, setIsGestureEnabled] = useState(false);
@@ -343,77 +300,9 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
   const speedPattern = useMemo(() => [0.12, 0.16, 0.2, 0.24, 0.3], []);
 
   const handlePageChange = (page: number) => {
-    clearFocus();
     setCurrentPage(page);
     scrollToWorks();
   };
-
-  const clearFocus = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-    
-    if (focusedPhotoId) {
-      setExitingPhotoId(focusedPhotoId);
-      setFocusedPhotoId(null);
-      setOriginRect(null);
-      
-      setTimeout(() => {
-        setExitingPhotoId(null);
-      }, 700);
-    } else {
-        setFocusedPhotoId(null);
-    }
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (focusedPhotoId) {
-        clearFocus();
-      }
-    };
-
-    if (focusedPhotoId) {
-      window.addEventListener('scroll', handleScroll, { passive: true });
-    }
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [focusedPhotoId]);
-
-  const handlePhotoClick = (photo: Photo, rect: DOMRect) => {
-    if (focusedPhotoId === photo.id) {
-      clearFocus();
-      return;
-    }
-    
-    clearFocus();
-    setFocusedPhotoId(photo.id);
-    setOriginRect(rect);
-    setExitingPhotoId(null);
-  };
-
-  const handleViewDetails = (photo: Photo, rect: DOMRect) => {
-    setSelectedPhoto(photo);
-    setOriginRect(rect);
-    setFocusedPhotoId(null);
-    clearFocus();
-  };
-  
-  // Find current photo index in all photos
-  const getCurrentPhotoIndex = (): number => {
-    if (!selectedPhoto) return 0;
-    const index = PHOTOS.findIndex(p => p.id === selectedPhoto.id);
-    return index >= 0 ? index : 0;
-  };
-
-  const handleBackgroundClick = () => {
-    if (focusedPhotoId) clearFocus();
-  };
-
-  const isAnyFocused = !!focusedPhotoId;
 
   return (
     <section 
@@ -492,7 +381,6 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
         data-scroll-label="Gallery"
         className="relative py-20 px-4 md:px-8 overflow-hidden z-10 snap-section"
         {...worksSwipe.bind}
-        onClick={handleBackgroundClick}
       >
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
@@ -531,12 +419,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
                   <GalleryItem
                     photo={photo}
                     theme={theme}
-                    isFocused={focusedPhotoId === photo.id}
-                    isExiting={exitingPhotoId === photo.id}
-                    isAnyFocused={isAnyFocused}
                     parallaxSpeed={parallaxSpeed}
-                    onClick={handlePhotoClick}
-                    onViewDetails={handleViewDetails}
                   />
                 </div>
               );
@@ -581,17 +464,6 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
           )}
         </div>
       </div>
-
-      {selectedPhoto && (
-        <PhotoModal 
-          photo={selectedPhoto}
-          photos={PHOTOS}
-          currentIndex={getCurrentPhotoIndex()}
-          theme={theme} 
-          originRect={originRect}
-          onClose={() => setSelectedPhoto(null)} 
-        />
-      )}
       
       <style>{`
         @keyframes fadeIn {
