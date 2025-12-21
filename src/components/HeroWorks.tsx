@@ -1,35 +1,37 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { Photo, Theme } from '../types';
+import { useNavigate } from 'react-router-dom';
+import { Photo, Theme, LicenseType } from '../types';
 import { useParallax } from '../hooks/useParallax';
 import { AnimatedWordFlip } from './ui/animated-word-flip';
 import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
 import { useSwipeGesture } from '../hooks/useSwipeGesture';
 import { smoothScroll } from '../utils/smoothScroll';
+import LicenseBadge from './LicenseBadge';
 
 interface HeroWorksProps {
   theme: Theme;
 }
 
 // Mock Data - Expanded for pagination
-const PHOTOS: Photo[] = [
-  { id: '1', url: 'https://picsum.photos/800/1200?random=1', title: 'Urban Solitude', category: 'Street', aspectRatio: 0.67 },
-  { id: '2', url: 'https://picsum.photos/1200/800?random=2', title: 'Mist & Stone', category: 'Landscape', aspectRatio: 1.5 },
-  { id: '3', url: 'https://picsum.photos/800/800?random=3', title: 'Geometric Shadows', category: 'Abstract', aspectRatio: 1 },
-  { id: '4', url: 'https://picsum.photos/800/1000?random=4', title: 'The Wait', category: 'Portrait', aspectRatio: 0.8 },
-  { id: '5', url: 'https://picsum.photos/900/1200?random=5', title: 'Concrete Waves', category: 'Architecture', aspectRatio: 0.75 },
-  { id: '6', url: 'https://picsum.photos/1200/900?random=6', title: 'Silent Forest', category: 'Nature', aspectRatio: 1.33 },
-  { id: '7', url: 'https://picsum.photos/800/1200?random=7', title: 'Reflections', category: 'Street', aspectRatio: 0.67 },
-  { id: '8', url: 'https://picsum.photos/1000/1000?random=8', title: 'Void', category: 'Abstract', aspectRatio: 1 },
-  { id: '9', url: 'https://picsum.photos/1200/800?random=9', title: 'Horizons', category: 'Landscape', aspectRatio: 1.5 },
-  { id: '10', url: 'https://picsum.photos/800/1100?random=10', title: 'Glass & Steel', category: 'Architecture', aspectRatio: 0.73 },
-  { id: '11', url: 'https://picsum.photos/1000/700?random=11', title: 'Morning Fog', category: 'Nature', aspectRatio: 1.43 },
-  { id: '12', url: 'https://picsum.photos/800/1200?random=12', title: 'Night Walk', category: 'Street', aspectRatio: 0.67 },
-  { id: '13', url: 'https://picsum.photos/1200/800?random=13', title: 'Distant Peaks', category: 'Landscape', aspectRatio: 1.5 },
-  { id: '14', url: 'https://picsum.photos/800/800?random=14', title: 'Spiral', category: 'Abstract', aspectRatio: 1 },
-  { id: '15', url: 'https://picsum.photos/800/1000?random=15', title: 'Gaze', category: 'Portrait', aspectRatio: 0.8 },
-  { id: '16', url: 'https://picsum.photos/900/1200?random=16', title: 'Brutalist', category: 'Architecture', aspectRatio: 0.75 },
-  { id: '17', url: 'https://picsum.photos/1200/900?random=17', title: 'Deep Woods', category: 'Nature', aspectRatio: 1.33 },
-  { id: '18', url: 'https://picsum.photos/800/1200?random=18', title: 'Puddle', category: 'Street', aspectRatio: 0.67 },
+export const PHOTOS: Photo[] = [
+  { id: '1', url: 'https://picsum.photos/800/1200?random=1', title: 'Urban Solitude', category: 'Street', aspectRatio: 0.67, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '2', url: 'https://picsum.photos/1200/800?random=2', title: 'Mist & Stone', category: 'Landscape', aspectRatio: 1.5, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '3', url: 'https://picsum.photos/800/800?random=3', title: 'Geometric Shadows', category: 'Abstract', aspectRatio: 1, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '4', url: 'https://picsum.photos/800/1000?random=4', title: 'The Wait', category: 'Portrait', aspectRatio: 0.8, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '5', url: 'https://picsum.photos/900/1200?random=5', title: 'Concrete Waves', category: 'Architecture', aspectRatio: 0.75, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '6', url: 'https://picsum.photos/1200/900?random=6', title: 'Silent Forest', category: 'Nature', aspectRatio: 1.33, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '7', url: 'https://picsum.photos/800/1200?random=7', title: 'Reflections', category: 'Street', aspectRatio: 0.67, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '8', url: 'https://picsum.photos/1000/1000?random=8', title: 'Void', category: 'Abstract', aspectRatio: 1, licenseType: LicenseType.CUSTOM },
+  { id: '9', url: 'https://picsum.photos/1200/800?random=9', title: 'Horizons', category: 'Landscape', aspectRatio: 1.5, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '10', url: 'https://picsum.photos/800/1100?random=10', title: 'Glass & Steel', category: 'Architecture', aspectRatio: 0.73, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '11', url: 'https://picsum.photos/1000/700?random=11', title: 'Morning Fog', category: 'Nature', aspectRatio: 1.43, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '12', url: 'https://picsum.photos/800/1200?random=12', title: 'Night Walk', category: 'Street', aspectRatio: 0.67, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '13', url: 'https://picsum.photos/1200/800?random=13', title: 'Distant Peaks', category: 'Landscape', aspectRatio: 1.5, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '14', url: 'https://picsum.photos/800/800?random=14', title: 'Spiral', category: 'Abstract', aspectRatio: 1, licenseType: LicenseType.PERSONAL_USE },
+  { id: '15', url: 'https://picsum.photos/800/1000?random=15', title: 'Gaze', category: 'Portrait', aspectRatio: 0.8, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '16', url: 'https://picsum.photos/900/1200?random=16', title: 'Brutalist', category: 'Architecture', aspectRatio: 0.75, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '17', url: 'https://picsum.photos/1200/900?random=17', title: 'Deep Woods', category: 'Nature', aspectRatio: 1.33, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '18', url: 'https://picsum.photos/800/1200?random=18', title: 'Puddle', category: 'Street', aspectRatio: 0.67, licenseType: LicenseType.RIGHTS_MANAGED },
 ];
 
 const ITEMS_PER_PAGE = 6;
@@ -41,6 +43,7 @@ interface GalleryItemProps {
 }
 
 const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, parallaxSpeed }) => {
+  const navigate = useNavigate();
   const [isInView, setIsInView] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -107,6 +110,11 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, parallaxSpeed }
             style={{ objectFit: 'cover' }}
           />
         )}
+
+        {/* License Badge */}
+        {photo.licenseType && (
+          <LicenseBadge licenseType={photo.licenseType} theme={theme} />
+        )}
         
         {/* Hover Overlay */}
         <div className={`absolute inset-0 z-30 transition-all duration-500 flex flex-col p-6 justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent ${
@@ -130,13 +138,28 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, parallaxSpeed }
             </p>
 
             {/* Details */}
-            <div className="flex items-center gap-6 text-white/60 text-xs uppercase tracking-wider">
+            <div className="flex items-center gap-6 text-white/60 text-xs uppercase tracking-wider mb-4">
               <span>ISO 400</span>
               <span className="w-1 h-1 rounded-full bg-white/30"></span>
               <span>35mm</span>
               <span className="w-1 h-1 rounded-full bg-white/30"></span>
               <span>f/2.8</span>
             </div>
+
+            {/* License Request Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/contact?photoId=${photo.id}`);
+              }}
+              className={`mt-2 py-2.5 px-4 text-xs tracking-widest font-light transition-all duration-300 border ${
+                theme === Theme.VIBRANT
+                  ? 'border-white/30 text-white hover:bg-white/10 hover:border-white/50'
+                  : 'border-white/20 text-white hover:bg-white/10 hover:border-white/40'
+              }`}
+            >
+              REQUEST LICENSE
+            </button>
           </div>
         </div>
       </div>

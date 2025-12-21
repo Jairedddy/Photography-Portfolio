@@ -1,9 +1,12 @@
-import React, { useState, FormEvent } from 'react';
-import { Theme } from '../types';
+import React, { useState, FormEvent, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Theme, Photo, UsageType } from '../types';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CustomCursor from '../components/CustomCursor';
 import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
+import { PHOTOS } from '../components/HeroWorks';
+import LicenseBadge from '../components/LicenseBadge';
 
 interface ContactPageProps {
   theme: Theme;
@@ -15,6 +18,7 @@ interface FormData {
   email: string;
   subject: string;
   message: string;
+  usageDescription?: string;
 }
 
 interface FormErrors {
@@ -22,9 +26,14 @@ interface FormErrors {
   email?: string;
   subject?: string;
   message?: string;
+  usageDescription?: string;
 }
 
 const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
+  const [searchParams] = useSearchParams();
+  const photoId = searchParams.get('photoId');
+  const selectedPhoto: Photo | undefined = photoId ? PHOTOS.find(p => p.id === photoId) : undefined;
+
   const contactHeadingAnimation = useTypographyAnimation<HTMLHeadingElement>({
     intensity: 0.11,
     letterSpacingRange: 0.06,
@@ -33,13 +42,24 @@ const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
-    subject: '',
+    subject: selectedPhoto ? `License Request: ${selectedPhoto.title}` : '',
     message: '',
+    usageDescription: '',
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Update subject when photo changes
+  useEffect(() => {
+    if (selectedPhoto) {
+      setFormData(prev => ({
+        ...prev,
+        subject: `License Request: ${selectedPhoto.title}`,
+      }));
+    }
+  }, [selectedPhoto]);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -61,6 +81,15 @@ const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
 
     if (!formData.subject.trim()) {
       newErrors.subject = 'Subject is required';
+    }
+
+    if (selectedPhoto) {
+      // For license requests, usage description is required
+      if (!formData.usageDescription?.trim()) {
+        newErrors.usageDescription = 'Usage description is required';
+      } else if (formData.usageDescription.trim().length < 10) {
+        newErrors.usageDescription = 'Usage description must be at least 10 characters';
+      }
     }
 
     if (!formData.message.trim()) {
@@ -96,10 +125,29 @@ const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
     try {
       const CONTACT_ENDPOINT = import.meta.env.VITE_CONTACT_ENDPOINT ?? "/api/contact";
       
+      // Format message for license requests
+      let messageToSend = formData.message;
+      if (selectedPhoto && formData.usageDescription) {
+        messageToSend = `License Request for Photo: "${selectedPhoto.title}" (ID: ${selectedPhoto.id})
+
+Usage Description:
+${formData.usageDescription}
+
+${formData.message ? `Additional Message:\n${formData.message}` : ''}
+
+---
+This is a license request submitted through the photography portfolio.`;
+      }
+      
       const response = await fetch(CONTACT_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: messageToSend,
+        }),
       });
 
       if (!response.ok) {
@@ -108,7 +156,13 @@ const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
       }
 
       setSubmitStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      setFormData({ 
+        name: '', 
+        email: '', 
+        subject: selectedPhoto ? `License Request: ${selectedPhoto.title}` : '', 
+        message: '',
+        usageDescription: '',
+      });
       
       // Reset success message after 5 seconds
       setTimeout(() => setSubmitStatus('idle'), 5000);
@@ -154,13 +208,43 @@ const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
                   : 'text-white'
               }`}
             >
-              Let's Create
+              {selectedPhoto ? 'Request License' : "Let's Create"}
             </h2>
             
             <p className={`text-sm md:text-base leading-relaxed font-light max-w-xl ${theme === Theme.VIBRANT ? 'text-gray-600' : 'text-neutral-400'}`}>
-              Interested in collaborating? 
+              {selectedPhoto 
+                ? `Request usage rights for "${selectedPhoto.title}"`
+                : 'Interested in collaborating?'}
             </p>
           </div>
+
+          {/* Photo Preview (if coming from photo) */}
+          {selectedPhoto && (
+            <div className="mb-8 flex justify-center">
+              <div className="relative w-full max-w-md">
+                <div className={`relative overflow-hidden rounded-sm ${
+                  theme === Theme.VIBRANT 
+                    ? 'bg-gray-200' 
+                    : 'bg-neutral-900'
+                }`} style={{ aspectRatio: selectedPhoto.aspectRatio }}>
+                  <img
+                    src={selectedPhoto.url}
+                    alt={selectedPhoto.title}
+                    className={`w-full h-full object-cover ${
+                      theme === Theme.MONOCHROME ? 'grayscale' : ''
+                    }`}
+                  />
+                  {selectedPhoto.licenseType && (
+                    <LicenseBadge licenseType={selectedPhoto.licenseType} theme={theme} />
+                  )}
+                </div>
+                <div className={`mt-3 text-center ${theme === Theme.VIBRANT ? 'text-gray-600' : 'text-neutral-400'}`}>
+                  <p className="text-sm serif italic">{selectedPhoto.title}</p>
+                  <p className="text-xs uppercase tracking-wider mt-1">{selectedPhoto.category}</p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Compact Contact Form */}
           <form onSubmit={handleSubmit} className="space-y-5 mb-12">
@@ -219,10 +303,30 @@ const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
               {errors.subject && <p className={errorClasses}>{errors.subject}</p>}
             </div>
 
+            {/* Usage Description Field (only for license requests) */}
+            {selectedPhoto && (
+              <div>
+                <label htmlFor="usageDescription" className={labelClasses}>
+                  USAGE DESCRIPTION
+                </label>
+                <textarea
+                  id="usageDescription"
+                  name="usageDescription"
+                  value={formData.usageDescription || ''}
+                  onChange={handleChange}
+                  rows={4}
+                  className={`${inputBaseClasses} resize-none`}
+                  placeholder="Describe how you plan to use this image (commercial, editorial, advertising, etc.)..."
+                  disabled={isSubmitting}
+                />
+                {errors.usageDescription && <p className={errorClasses}>{errors.usageDescription}</p>}
+              </div>
+            )}
+
             {/* Message Field */}
             <div>
               <label htmlFor="message" className={labelClasses}>
-                MESSAGE
+                {selectedPhoto ? 'ADDITIONAL MESSAGE (OPTIONAL)' : 'MESSAGE'}
               </label>
               <textarea
                 id="message"
@@ -231,7 +335,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ theme, toggleTheme }) => {
                 onChange={handleChange}
                 rows={4}
                 className={`${inputBaseClasses} resize-none`}
-                placeholder="Tell me about your project..."
+                placeholder={selectedPhoto ? "Any additional information..." : "Tell me about your project..."}
                 disabled={isSubmitting}
               />
               {errors.message && <p className={errorClasses}>{errors.message}</p>}

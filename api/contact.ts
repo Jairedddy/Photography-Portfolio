@@ -87,12 +87,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const mailer = getTransporter();
+    
+    // Detect if this is a license request
+    const isLicenseRequest = subject.toLowerCase().includes('license request') || 
+                             message.toLowerCase().includes('license request');
+    
+    // Format email body
+    let emailBody = `Name: ${name}\nEmail: ${email}\n`;
+    
+    if (isLicenseRequest) {
+      emailBody += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      emailBody += `📸 LICENSE REQUEST\n`;
+      emailBody += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+    }
+    
+    emailBody += `${message}`;
+    
     await mailer.sendMail({
       from: `"Photography Portfolio Contact" <${process.env.SMTP_USER}>`,
       to: process.env.TO_ADDRESS,
       replyTo: email,
       subject: `[Photography Portfolio] ${subject}`,
-      text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
+      text: emailBody,
     });
 
     res.status(200).json({ ok: true });
