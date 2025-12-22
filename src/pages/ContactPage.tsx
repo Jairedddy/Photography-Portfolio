@@ -1,6 +1,6 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Theme, Photo, UsageType } from '../types';
+import { Theme, Photo } from '../types';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CustomCursor from '../components/CustomCursor';
