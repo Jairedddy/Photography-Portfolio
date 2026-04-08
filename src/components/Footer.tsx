@@ -24,9 +24,9 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
         </div>
 
         <div className="flex gap-6 text-sm opacity-60">
+          <a href="https://www.jairedddy.in/" target='_blank' className="hover:opacity-100 transition-opacity">Website</a>
           <a href="https://instagram.com/jai_redddy" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition-opacity">Instagram</a>
-          <a href="#" className="hover:opacity-100 transition-opacity">Twitter</a>
-          <a href="mailto:jaishukreddy7@gmail.com" className="hover:opacity-100 transition-opacity">Email</a>
+          <a href="mailto:jaishukreddy7@gmail.com" target='_blank' className="hover:opacity-100 transition-opacity">Email</a>
         </div>
 
         <div className="text-xs opacity-50">
