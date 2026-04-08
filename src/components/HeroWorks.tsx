@@ -11,9 +11,6 @@ interface HeroWorksProps {
   theme: Theme;
 }
 
-// Portfolio images — all 35 local photos across 4 pages of 9/9/9/8.
-// Each page uses sequence [P,L,L,P,P,L,P,P,P] so the 3-col dense grid
-// fills perfectly with zero gaps (5 rows × 3 cols = 15 cell-units per page).
 export const PHOTOS: Photo[] = [
   // Page 1 — [P, L, L, P, P, L, P, P, P]
   { id: '1',  url: '/images/1.jpg',  title: 'Omniscience',       category: 'Street',   description: "Two lenses, no blind spots. The station watches itself watch you.", aspectRatio: 0.542, licenseType: LicenseType.RIGHTS_MANAGED },
@@ -26,34 +23,34 @@ export const PHOTOS: Photo[] = [
   { id: '8',  url: '/images/6.jpg',  title: 'Contraband Light',  category: 'Abstract', description: "The room wanted darkness. The window disagreed. The shoes just waited.", aspectRatio: 0.562, licenseType: LicenseType.ROYALTY_FREE },
   { id: '9',  url: '/images/20.jpg', title: 'Attached',          category: 'Abstract', description: "Every departure starts here. A small metal loop holding the only key to motion.", aspectRatio: 0.562, licenseType: LicenseType.EDITORIAL_ONLY },
   // Page 2 — [P, L, L, P, P, L, P, P, P]
-  { id: '10', url: '/images/10.jpg', title: 'Photo 10', category: 'Portrait',  description: '', aspectRatio: 0.562, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '11', url: '/images/13.jpg', title: 'Photo 11', category: 'Landscape', description: '', aspectRatio: 1.778, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '12', url: '/images/14.jpg', title: 'Photo 12', category: 'Landscape', description: '', aspectRatio: 1.778, licenseType: LicenseType.EDITORIAL_ONLY },
-  { id: '13', url: '/images/11.jpg', title: 'Photo 13', category: 'Portrait',  description: '', aspectRatio: 0.562, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '14', url: '/images/12.jpg', title: 'Photo 14', category: 'Portrait',  description: '', aspectRatio: 0.562, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '15', url: '/images/15.jpg', title: 'Photo 15', category: 'Landscape', description: '', aspectRatio: 1.777, licenseType: LicenseType.PERSONAL_USE },
-  { id: '16', url: '/images/38.jpg', title: 'Photo 16', category: 'Street',    description: '', aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '17', url: '/images/40.jpg', title: 'Photo 17', category: 'Street',    description: '', aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '18', url: '/images/41.jpg', title: 'Photo 18', category: 'Street',    description: '', aspectRatio: 0.563, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '10', url: '/images/10.jpg', title: 'The Fourth Minaret',    category: 'Architecture', description: "One of four. It doesn't need the others to hold up the sky.", aspectRatio: 0.562, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '11', url: '/images/13.jpg', title: 'The Unguarded Moment',  category: 'Street',       description: "She doesn't know she's being watched. The world doesn't care. The coffee's going cold.", aspectRatio: 1.778, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '12', url: '/images/14.jpg', title: 'The Whole Picture',     category: 'Street',       description: "Pull back far enough and the story changes. Everyone is someone else's background.", aspectRatio: 1.778, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '13', url: '/images/11.jpg', title: 'No Way Out',            category: 'Architecture', description: "The sign says exit. The feeling says otherwise.", aspectRatio: 0.562, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '14', url: '/images/12.jpg', title: 'Ward Stairwell',        category: 'Architecture', description: "Every floor looks the same. The railing keeps you honest. Nobody takes the stairs by choice.", aspectRatio: 0.562, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '15', url: '/images/15.jpg', title: 'Table Nine',            category: 'Abstract',     description: "Order number 09. Two cold lattes. Whatever was said here has already been forgotten.", aspectRatio: 1.777, licenseType: LicenseType.PERSONAL_USE },
+  { id: '16', url: '/images/38.jpg', title: 'After Hours Shack',     category: 'Street',       description: "No ocean in sight. Just light that shouldn't be this warm, grain that shouldn't feel this alive.", aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '17', url: '/images/40.jpg', title: 'False Idols',           category: 'Abstract',     description: "The knobs are analog. The song is a warning. Nobody turned it off.", aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '18', url: '/images/41.jpg', title: 'Crowned',               category: 'Portrait',     description: "His back to the camera, the cliffs behind him, and a country floating above his head like a benediction.", aspectRatio: 0.563, licenseType: LicenseType.EDITORIAL_ONLY },
   // Page 3 — [P, L, L, P, P, L, P, P, P]
-  { id: '19', url: '/images/16.jpg', title: 'Photo 19', category: 'Portrait',  description: '', aspectRatio: 0.562, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '20', url: '/images/17.jpg', title: 'Photo 20', category: 'Landscape', description: '', aspectRatio: 1.776, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '21', url: '/images/21.jpg', title: 'Photo 21', category: 'Landscape', description: '', aspectRatio: 1.778, licenseType: LicenseType.EDITORIAL_ONLY },
-  { id: '22', url: '/images/18.jpg', title: 'Photo 22', category: 'Street',    description: '', aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '23', url: '/images/19.jpg', title: 'Photo 23', category: 'Street',    description: '', aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '24', url: '/images/22.jpg', title: 'Photo 24', category: 'Landscape', description: '', aspectRatio: 1.777, licenseType: LicenseType.CUSTOM },
-  { id: '25', url: '/images/43.jpg', title: 'Photo 25', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '26', url: '/images/44.jpg', title: 'Photo 26', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '27', url: '/images/45.jpg', title: 'Photo 27', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '19', url: '/images/16.jpg', title: 'Dawn Wader',        category: 'Portrait',     description: "The sun just cleared the horizon. He's already in the water. Neither of them is in a hurry.", aspectRatio: 0.562, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '20', url: '/images/17.jpg', title: 'Knot Theory',       category: 'Abstract',     description: "No beginning. No end. Just rope, pressing into rope, holding everything together by sheer persistence.", aspectRatio: 1.776, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '21', url: '/images/21.jpg', title: 'Specimen 911',      category: 'Automotive',   description: "Behind glass, it can't be touched. That was always the point.", aspectRatio: 1.778, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '22', url: '/images/18.jpg', title: 'Circle of Warmth',  category: 'Street',       description: "The fire is the only honest thing here. Everything else fades into the dark.", aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '23', url: '/images/19.jpg', title: 'The Only Way Up',   category: 'Landscape',    description: "The light is real. The exit isn't close. The cave doesn't care which way you think is out.", aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '24', url: '/images/22.jpg', title: 'Display Model',     category: 'Automotive',   description: "It breathes, but just barely. The glass keeps it perfect and perfectly unreachable.", aspectRatio: 1.777, licenseType: LicenseType.CUSTOM },
+  { id: '25', url: '/images/43.jpg', title: 'Lone Pedestrian',   category: 'Street',       description: "Dead center. Umbrella up. The road is symmetrical. Only the person is not.", aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '26', url: '/images/44.jpg', title: 'Last Round',        category: 'Street',       description: "Two glasses. One year ending. The grain remembers what the mind won't.", aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '27', url: '/images/45.jpg', title: 'The Ritual',        category: 'Portrait',     description: "The light found his shoulder before he found the chord. His face doesn't matter. The music does.", aspectRatio: 0.563, licenseType: LicenseType.EDITORIAL_ONLY },
   // Page 4 — [L, L, P, P, P, P, P, P]  (2L + 6P = 14 units, 1 trailing gap filled by dense)
-  { id: '28', url: '/images/4.jpg',   title: 'Photo 28', category: 'Landscape', description: '', aspectRatio: 2.165, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '29', url: '/images/47.jpg',  title: 'Photo 29', category: 'Landscape', description: '', aspectRatio: 1.778, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '30', url: '/images/42.jpg',  title: 'Photo 30', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.EDITORIAL_ONLY },
-  { id: '31', url: '/images/39.webp', title: 'Photo 31', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '32', url: '/images/46.jpg',  title: 'Photo 32', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '33', url: '/images/48.png',  title: 'Photo 33', category: 'Portrait',  description: '', aspectRatio: 0.750, licenseType: LicenseType.PERSONAL_USE },
-  { id: '34', url: '/images/49.png',  title: 'Photo 34', category: 'Portrait',  description: '', aspectRatio: 0.750, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '35', url: '/images/50.jpg',  title: 'Photo 35', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '28', url: '/images/4.jpg',   title: 'Frosticks',        category: 'Street',    description: "The sign glows like it means it. Everything below it is dark. Cold has never looked this inviting.", aspectRatio: 2.165, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '29', url: '/images/47.jpg',  title: 'Collective Noise', category: 'Street',    description: "The stage is the only thing with a plan. The crowd just showed up and became one thing.", aspectRatio: 1.778, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '30', url: '/images/42.jpg',  title: 'Unannounced',      category: 'Street',    description: "The engine was already running. The night had no warning. Neither did whoever was inside.", aspectRatio: 0.563, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '31', url: '/images/39.webp', title: 'The Backlit Shelf', category: 'Abstract',  description: "The bottles glow. The bar doesn't. You're already on the wrong side of the counter.", aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '32', url: '/images/46.jpg',  title: 'One Light Left',   category: 'Abstract',  description: "The playground emptied hours ago. One streetlight stayed. The bars cast shadows like they're counting.", aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '33', url: '/images/48.png',  title: 'High Tide, Raised Hands', category: 'Portrait', description: "Two of them reaching for something. One just standing. The ocean doesn't ask which is which.", aspectRatio: 0.750, licenseType: LicenseType.PERSONAL_USE },
+  { id: '34', url: '/images/49.png',  title: 'Walking Into Gold', category: 'Portrait', description: "Sunset at his back. The sea at his feet. He didn't look back, and the light didn't ask him to.", aspectRatio: 0.750, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '35', url: '/images/50.jpg',  title: 'Campus Dusk',      category: 'Street',    description: "The sky was the whole point. Everyone walking underneath it had no idea.", aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
 ];
 
 const ITEMS_PER_PAGE = 9;

@@ -30,17 +30,19 @@ const PHOTO_SPACING = 550; // Spacing between images (photos are 500px wide)
 const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ theme }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isSticky, setIsSticky] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [sectionHeight, setSectionHeight] = useState(0);
 
-  // Motion values for smooth animations
+  // Tight spring — tracks scroll closely without lag or bounce
   const scrollX = useMotionValue(0);
   const smoothScrollX = useSpring(scrollX, {
-    stiffness: 150,
-    damping: 40,
-    mass: 0.8,
+    stiffness: 500,
+    damping: 60,
+    mass: 0.6,
   });
+
+  // Single transform applied to the whole strip — avoids 15 separate animated values
+  const translateX = useTransform(smoothScrollX, (x) => -x);
 
   // Check if mobile
   useEffect(() => {
@@ -116,10 +118,6 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
         progress = 1;
       }
 
-      if (shouldBeSticky !== isSticky) {
-        setIsSticky(shouldBeSticky);
-      }
-
       if (shouldBeSticky) {
         // Map vertical scroll progress to horizontal position
         const targetX = progress * maxHorizontalScroll;
@@ -153,7 +151,7 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
       }
       window.removeEventListener('resize', handleResize);
     };
-  }, [isMobile, isSticky, scrollX, sectionHeight]);
+  }, [isMobile, scrollX, sectionHeight]);
 
   // Theme-aware styles
   const isMonochrome = theme === Theme.MONOCHROME;
@@ -204,9 +202,7 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
     >
       
       <div
-        className={`sticky top-20 flex items-center overflow-hidden ${
-          isSticky ? 'transition-all duration-500 ease-out' : ''
-        }`}
+        className="sticky top-20 flex items-center overflow-hidden"
         style={{
           height: 'calc(90vh - 5rem)',
           paddingLeft: '5%',
@@ -214,25 +210,25 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
           paddingTop: '2rem',
         }}
       >
-        {/* Horizontal scroll container */}
-        <div
+        {/* Single translated strip — one motion value drives all photos */}
+        <motion.div
           ref={containerRef}
-          className="relative w-full flex items-center"
+          className="relative flex items-center flex-shrink-0"
           style={{
+            x: translateX,
             height: '100%',
-            minWidth: `${PORTRAIT_PHOTOS.length * PHOTO_SPACING}px`,
+            width: `${PORTRAIT_PHOTOS.length * PHOTO_SPACING}px`,
+            willChange: 'transform',
           }}
         >
           {/* Render all photos */}
           {PORTRAIT_PHOTOS.map((photo, index) => {
             return (
-              <motion.div
+              <div
                 key={photo.id}
                 className="absolute flex items-center"
                 style={{
-                  x: useTransform(smoothScrollX, (x) => -x),
                   left: `${index * PHOTO_SPACING}px`,
-                  zIndex: 10,
                   height: '100%',
                 }}
               >
@@ -269,10 +265,10 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
                     />
                   </div>
                 </motion.div>
-              </motion.div>
+              </div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

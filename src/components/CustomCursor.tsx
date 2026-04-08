@@ -18,7 +18,6 @@ const CustomCursor: React.FC<CustomCursorProps> = ({ theme }) => {
 
     const onMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      // Check if target is clickable (button, link, input) or has specific class
       const isClickable = 
         target.tagName === 'A' ||
         target.tagName === 'BUTTON' ||
