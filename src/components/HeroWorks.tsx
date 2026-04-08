@@ -6,35 +6,57 @@ import { AnimatedWordFlip } from './ui/animated-word-flip';
 import { useTypographyAnimation } from '../hooks/useTypographyAnimation';
 import { useSwipeGesture } from '../hooks/useSwipeGesture';
 import { smoothScroll } from '../utils/smoothScroll';
-import LicenseBadge from './LicenseBadge';
 
 interface HeroWorksProps {
   theme: Theme;
 }
 
-// Mock Data - Expanded for pagination
+// Portfolio images — all 35 local photos across 4 pages of 9/9/9/8.
+// Each page uses sequence [P,L,L,P,P,L,P,P,P] so the 3-col dense grid
+// fills perfectly with zero gaps (5 rows × 3 cols = 15 cell-units per page).
 export const PHOTOS: Photo[] = [
-  { id: '1', url: 'https://picsum.photos/800/1200?random=1', title: 'Urban Solitude', category: 'Street', aspectRatio: 0.67, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '2', url: 'https://picsum.photos/1200/800?random=2', title: 'Mist & Stone', category: 'Landscape', aspectRatio: 1.5, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '3', url: 'https://picsum.photos/800/800?random=3', title: 'Geometric Shadows', category: 'Abstract', aspectRatio: 1, licenseType: LicenseType.EDITORIAL_ONLY },
-  { id: '4', url: 'https://picsum.photos/800/1000?random=4', title: 'The Wait', category: 'Portrait', aspectRatio: 0.8, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '5', url: 'https://picsum.photos/900/1200?random=5', title: 'Concrete Waves', category: 'Architecture', aspectRatio: 0.75, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '6', url: 'https://picsum.photos/1200/900?random=6', title: 'Silent Forest', category: 'Nature', aspectRatio: 1.33, licenseType: LicenseType.EDITORIAL_ONLY },
-  { id: '7', url: 'https://picsum.photos/800/1200?random=7', title: 'Reflections', category: 'Street', aspectRatio: 0.67, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '8', url: 'https://picsum.photos/1000/1000?random=8', title: 'Void', category: 'Abstract', aspectRatio: 1, licenseType: LicenseType.CUSTOM },
-  { id: '9', url: 'https://picsum.photos/1200/800?random=9', title: 'Horizons', category: 'Landscape', aspectRatio: 1.5, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '10', url: 'https://picsum.photos/800/1100?random=10', title: 'Glass & Steel', category: 'Architecture', aspectRatio: 0.73, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '11', url: 'https://picsum.photos/1000/700?random=11', title: 'Morning Fog', category: 'Nature', aspectRatio: 1.43, licenseType: LicenseType.EDITORIAL_ONLY },
-  { id: '12', url: 'https://picsum.photos/800/1200?random=12', title: 'Night Walk', category: 'Street', aspectRatio: 0.67, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '13', url: 'https://picsum.photos/1200/800?random=13', title: 'Distant Peaks', category: 'Landscape', aspectRatio: 1.5, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '14', url: 'https://picsum.photos/800/800?random=14', title: 'Spiral', category: 'Abstract', aspectRatio: 1, licenseType: LicenseType.PERSONAL_USE },
-  { id: '15', url: 'https://picsum.photos/800/1000?random=15', title: 'Gaze', category: 'Portrait', aspectRatio: 0.8, licenseType: LicenseType.RIGHTS_MANAGED },
-  { id: '16', url: 'https://picsum.photos/900/1200?random=16', title: 'Brutalist', category: 'Architecture', aspectRatio: 0.75, licenseType: LicenseType.ROYALTY_FREE },
-  { id: '17', url: 'https://picsum.photos/1200/900?random=17', title: 'Deep Woods', category: 'Nature', aspectRatio: 1.33, licenseType: LicenseType.EDITORIAL_ONLY },
-  { id: '18', url: 'https://picsum.photos/800/1200?random=18', title: 'Puddle', category: 'Street', aspectRatio: 0.67, licenseType: LicenseType.RIGHTS_MANAGED },
+  // Page 1 — [P, L, L, P, P, L, P, P, P]
+  { id: '1',  url: '/images/1.jpg',  title: 'Omniscience',       category: 'Street',   description: "Two lenses, no blind spots. The station watches itself watch you.", aspectRatio: 0.542, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '2',  url: '/images/7.jpg',  title: 'Surrender Grips',   category: 'Street',   description: "Reaching up just to hold on. The train decides where you go.", aspectRatio: 1.778, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '3',  url: '/images/8.jpg',  title: 'First Light',       category: 'Portrait', description: "A small flame in the dark. The smoke knows where it's going. He doesn't.", aspectRatio: 1.779, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '4',  url: '/images/2.jpg',  title: 'The Threshold',     category: 'Street',   description: "It opens for everyone. It closes just the same.", aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '5',  url: '/images/3.jpg',  title: 'Stakeout',          category: 'Street',   description: "Watching through things that don't know they're watching.", aspectRatio: 0.562, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '6',  url: '/images/9.jpg',  title: 'Crimson Ceiling',   category: 'Portrait', description: "The eyes don't blink. The red doesn't stop. Something up there has all the answers.", aspectRatio: 1.776, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '7',  url: '/images/5.jpg',  title: 'Ownership',         category: 'Street',   description: "Two chairs. One man. The whole floor held in quiet contempt.", aspectRatio: 0.562, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '8',  url: '/images/6.jpg',  title: 'Contraband Light',  category: 'Abstract', description: "The room wanted darkness. The window disagreed. The shoes just waited.", aspectRatio: 0.562, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '9',  url: '/images/20.jpg', title: 'Attached',          category: 'Abstract', description: "Every departure starts here. A small metal loop holding the only key to motion.", aspectRatio: 0.562, licenseType: LicenseType.EDITORIAL_ONLY },
+  // Page 2 — [P, L, L, P, P, L, P, P, P]
+  { id: '10', url: '/images/10.jpg', title: 'Photo 10', category: 'Portrait',  description: '', aspectRatio: 0.562, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '11', url: '/images/13.jpg', title: 'Photo 11', category: 'Landscape', description: '', aspectRatio: 1.778, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '12', url: '/images/14.jpg', title: 'Photo 12', category: 'Landscape', description: '', aspectRatio: 1.778, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '13', url: '/images/11.jpg', title: 'Photo 13', category: 'Portrait',  description: '', aspectRatio: 0.562, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '14', url: '/images/12.jpg', title: 'Photo 14', category: 'Portrait',  description: '', aspectRatio: 0.562, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '15', url: '/images/15.jpg', title: 'Photo 15', category: 'Landscape', description: '', aspectRatio: 1.777, licenseType: LicenseType.PERSONAL_USE },
+  { id: '16', url: '/images/38.jpg', title: 'Photo 16', category: 'Street',    description: '', aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '17', url: '/images/40.jpg', title: 'Photo 17', category: 'Street',    description: '', aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '18', url: '/images/41.jpg', title: 'Photo 18', category: 'Street',    description: '', aspectRatio: 0.563, licenseType: LicenseType.EDITORIAL_ONLY },
+  // Page 3 — [P, L, L, P, P, L, P, P, P]
+  { id: '19', url: '/images/16.jpg', title: 'Photo 19', category: 'Portrait',  description: '', aspectRatio: 0.562, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '20', url: '/images/17.jpg', title: 'Photo 20', category: 'Landscape', description: '', aspectRatio: 1.776, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '21', url: '/images/21.jpg', title: 'Photo 21', category: 'Landscape', description: '', aspectRatio: 1.778, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '22', url: '/images/18.jpg', title: 'Photo 22', category: 'Street',    description: '', aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '23', url: '/images/19.jpg', title: 'Photo 23', category: 'Street',    description: '', aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '24', url: '/images/22.jpg', title: 'Photo 24', category: 'Landscape', description: '', aspectRatio: 1.777, licenseType: LicenseType.CUSTOM },
+  { id: '25', url: '/images/43.jpg', title: 'Photo 25', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '26', url: '/images/44.jpg', title: 'Photo 26', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '27', url: '/images/45.jpg', title: 'Photo 27', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.EDITORIAL_ONLY },
+  // Page 4 — [L, L, P, P, P, P, P, P]  (2L + 6P = 14 units, 1 trailing gap filled by dense)
+  { id: '28', url: '/images/4.jpg',   title: 'Photo 28', category: 'Landscape', description: '', aspectRatio: 2.165, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '29', url: '/images/47.jpg',  title: 'Photo 29', category: 'Landscape', description: '', aspectRatio: 1.778, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '30', url: '/images/42.jpg',  title: 'Photo 30', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.EDITORIAL_ONLY },
+  { id: '31', url: '/images/39.webp', title: 'Photo 31', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '32', url: '/images/46.jpg',  title: 'Photo 32', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
+  { id: '33', url: '/images/48.png',  title: 'Photo 33', category: 'Portrait',  description: '', aspectRatio: 0.750, licenseType: LicenseType.PERSONAL_USE },
+  { id: '34', url: '/images/49.png',  title: 'Photo 34', category: 'Portrait',  description: '', aspectRatio: 0.750, licenseType: LicenseType.RIGHTS_MANAGED },
+  { id: '35', url: '/images/50.jpg',  title: 'Photo 35', category: 'Portrait',  description: '', aspectRatio: 0.563, licenseType: LicenseType.ROYALTY_FREE },
 ];
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 9;
 
 interface GalleryItemProps {
   photo: Photo;
@@ -86,7 +108,7 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, parallaxSpeed }
         className="relative h-full w-full transition-transform duration-[600ms] ease-[cubic-bezier(0.2,1,0.3,1)]"
       >
         {/* Background Placeholder */}
-        <div className={`absolute inset-0 transition-colors duration-500 ${theme === Theme.VIBRANT ? 'bg-gray-200' : 'bg-neutral-900'}`} style={{ aspectRatio: `${photo.aspectRatio}` }} />
+        <div className={`absolute inset-0 transition-colors duration-500 ${theme === Theme.VIBRANT ? 'bg-gray-200' : 'bg-neutral-900'}`} />
 
         {/* Skeleton Shimmer Effect */}
         {!isLoaded && (
@@ -111,11 +133,6 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, parallaxSpeed }
           />
         )}
 
-        {/* License Badge */}
-        {photo.licenseType && (
-          <LicenseBadge licenseType={photo.licenseType} theme={theme} />
-        )}
-        
         {/* Hover Overlay */}
         <div className={`absolute inset-0 z-30 transition-all duration-500 flex flex-col p-6 justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent ${
           isHovered ? 'opacity-100' : 'opacity-0'
@@ -133,9 +150,11 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, parallaxSpeed }
             </div>
 
             {/* Description */}
-            <p className="text-white/80 text-sm leading-relaxed mb-4">
-              {photo.description || "A captivating moment frozen in time. This piece explores the interplay of light, shadow, and composition, revealing the beauty in everyday scenes."}
-            </p>
+            {photo.description && (
+              <p className="text-white/80 text-sm leading-relaxed mb-4">
+                {photo.description}
+              </p>
+            )}
 
             {/* Details */}
             <div className="flex items-center gap-6 text-white/60 text-xs uppercase tracking-wider mb-4">
@@ -173,6 +192,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const [isGestureEnabled, setIsGestureEnabled] = useState(false);
   const [gridColumns, setGridColumns] = useState(3);
+  const [gridRowHeight, setGridRowHeight] = useState(280);
   const [scrollY, setScrollY] = useState(0);
   const [jaiReddyOffset, setJaiReddyOffset] = useState(80);
   const [jaiReddyTop, setJaiReddyTop] = useState('50vh');
@@ -217,22 +237,25 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
     return () => window.removeEventListener('resize', updateOffset);
   }, []);
 
-  // Calculate optimal grid columns based on viewport
+  // Calculate optimal grid columns and row height based on viewport
   useEffect(() => {
-    const updateGridColumns = () => {
+    const updateGrid = () => {
       const width = window.innerWidth;
       if (width < 700) {
         setGridColumns(1);
+        setGridRowHeight(220);
       } else if (width < 1100) {
         setGridColumns(2);
+        setGridRowHeight(250);
       } else {
         setGridColumns(3);
+        setGridRowHeight(280);
       }
     };
 
-    updateGridColumns();
-    window.addEventListener('resize', updateGridColumns);
-    return () => window.removeEventListener('resize', updateGridColumns);
+    updateGrid();
+    window.addEventListener('resize', updateGrid);
+    return () => window.removeEventListener('resize', updateGrid);
   }, []);
 
   useEffect(() => {
@@ -276,38 +299,16 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
     },
   });
 
-  // Advanced grid layout algorithm
-  const calculateGridLayout = (photos: Photo[], columns: number) => {
-    const layout: Array<{ photo: Photo; rowSpan: number; colSpan: number }> = [];
-    const baseRowHeight = 300;
-    const gap = 32;
-
-    photos.forEach((photo) => {
-      const aspectRatio = photo.aspectRatio;
-      
-      let colSpan = 1;
-      if (aspectRatio > 1.3) {
-        colSpan = columns;
-      } else if (aspectRatio > 1.1) {
-        colSpan = Math.min(2, columns);
-      } else {
-        colSpan = 1;
-      }
-      
-      const containerWidth = containerRef.current?.clientWidth || 1200;
-      const availableWidth = containerWidth - (gap * (columns - 1));
-      const itemWidth = (availableWidth / columns) * colSpan + (gap * (colSpan - 1));
-      const itemHeight = itemWidth / aspectRatio;
-      const rowSpan = Math.max(1, Math.round(itemHeight / baseRowHeight));
-
-      layout.push({
-        photo,
-        rowSpan: Math.min(Math.max(rowSpan, 1), 5),
-        colSpan: Math.min(colSpan, columns),
-      });
-    });
-
-    return layout;
+  // Uniform masonry grid: all items 1 column wide.
+  // Portrait images (ratio < 0.85) get rowSpan=2 for a tall cell;
+  // landscape images get rowSpan=1 for a shorter wide cell.
+  // Dense auto-placement fills every gap automatically.
+  const calculateGridLayout = (photos: Photo[], _columns: number) => {
+    return photos.map((photo) => ({
+      photo,
+      colSpan: 1,
+      rowSpan: photo.aspectRatio < 0.85 ? 2 : 1,
+    }));
   };
 
   // Pagination Logic
@@ -346,7 +347,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
           willChange: 'transform, opacity'
         }}
       >
-        <h1 className={`text-[15rem] md:text-[25rem] leading-none font-bold serif tracking-tighter ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
+        <h1 className={`text-[5rem] sm:text-[9rem] md:text-[15rem] xl:text-[25rem] leading-none font-bold serif tracking-tighter ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
           JAI REDDY
         </h1>
       </div>
@@ -372,7 +373,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
             <h2
               ref={heroHeadingAnimation.ref}
               style={heroHeadingAnimation.style}
-              className={`text-6xl md:text-9xl font-light serif ${
+              className={`text-5xl sm:text-7xl md:text-9xl font-light serif ${
                 theme === Theme.VIBRANT ? 'leading-[1.12] pb-[2px]' : 'leading-tight'
               } animate-[slideUpReveal_1.5s_cubic-bezier(0.2,1,0.3,1)_0.5s_forwards] translate-y-full opacity-0 inline-flex items-center justify-center gap-2 ${
               theme === Theme.VIBRANT
@@ -404,15 +405,15 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
         id="works"
         data-scroll-section="works"
         data-scroll-label="Gallery"
-        className="relative py-20 px-4 md:px-8 overflow-hidden z-10 snap-section"
+        className="relative py-10 md:py-20 px-4 md:px-8 overflow-hidden z-10 snap-section"
         {...worksSwipe.bind}
       >
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
+          <div className="mb-10 md:mb-20 flex flex-col md:flex-row justify-between items-center md:items-end gap-4 md:gap-8">
             <h2
               ref={worksHeadingAnimation.ref}
               style={worksHeadingAnimation.style}
-              className={`text-4xl md:text-6xl serif ${
+              className={`text-3xl sm:text-4xl md:text-6xl serif text-center md:text-left ${
               theme === Theme.VIBRANT
                 ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent'
                 : 'text-white'
@@ -422,13 +423,14 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
             </h2>
           </div>
 
-          {/* Advanced Grid Layout */}
-          <div 
+          {/* Uniform masonry grid — dense auto-placement fills all gaps */}
+          <div
             ref={containerRef}
-            className="grid gap-8"
+            className="grid gap-4"
             style={{
               gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
-              gridAutoRows: '300px',
+              gridAutoRows: `${gridRowHeight}px`,
+              gridAutoFlow: 'dense',
             }}
           >
             {gridLayout.map(({ photo, rowSpan, colSpan }, index) => {
@@ -453,21 +455,21 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-              <div className={`mt-24 flex justify-center items-center gap-8 ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
+              <div className={`mt-12 md:mt-24 flex justify-center items-center gap-4 md:gap-8 ${theme === Theme.VIBRANT ? 'text-black' : 'text-white'}`}>
                   <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="disabled:opacity-20 hover:opacity-50 transition-opacity uppercase tracking-widest text-[10px] font-bold"
+                      className="disabled:opacity-20 hover:opacity-50 transition-opacity uppercase tracking-widest text-[10px] font-bold min-w-[44px] min-h-[44px] flex items-center justify-center"
                   >
                       Prev
                   </button>
 
-                  <div className="flex gap-4">
+                  <div className="flex gap-2 md:gap-4">
                       {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
                           <button
                               key={number}
                               onClick={() => handlePageChange(number)}
-                              className={`w-8 h-8 flex items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
+                              className={`w-11 h-11 flex items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
                                   currentPage === number
                                       ? (theme === Theme.VIBRANT ? 'bg-black text-[#fafafa]' : 'bg-white text-black')
                                       : (theme === Theme.VIBRANT ? 'hover:bg-gray-200' : 'hover:bg-neutral-800')
@@ -481,7 +483,7 @@ const HeroWorks: React.FC<HeroWorksProps> = ({ theme }) => {
                   <button
                       onClick={() => handlePageChange(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className="disabled:opacity-20 hover:opacity-50 transition-opacity uppercase tracking-widest text-[10px] font-bold"
+                      className="disabled:opacity-20 hover:opacity-50 transition-opacity uppercase tracking-widest text-[10px] font-bold min-w-[44px] min-h-[44px] flex items-center justify-center"
                   >
                       Next
                   </button>

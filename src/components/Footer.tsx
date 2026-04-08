@@ -18,18 +18,18 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
     >
       
       <div className={`relative z-10 ${theme === Theme.VIBRANT ? 'border-gray-200 text-black' : 'border-neutral-900 text-white'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
         <div className="text-center md:text-left">
-          <h4 className="serif text-2xl">Jai Reddy</h4>
+          <h4 className="serif text-xl md:text-2xl">Jai Reddy</h4>
         </div>
-        
+
         <div className="flex gap-6 text-sm opacity-60">
           <a href="https://instagram.com/jai_redddy" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition-opacity">Instagram</a>
           <a href="#" className="hover:opacity-100 transition-opacity">Twitter</a>
           <a href="mailto:jaishukreddy7@gmail.com" className="hover:opacity-100 transition-opacity">Email</a>
         </div>
 
-        <div className="text-xs opacity-30">
+        <div className="text-xs opacity-50">
           &copy; {new Date().getFullYear()} Jai. All rights reserved.
         </div>
       </div>

@@ -193,8 +193,8 @@ This is a license request submitted through the photography portfolio.`;
       <CustomCursor theme={theme} />
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       
-      <section 
-        className="relative min-h-screen flex flex-col justify-center items-center py-20 px-6"
+      <section
+        className="relative min-h-screen flex flex-col justify-center items-center py-16 md:py-20 px-5 md:px-6"
       >
         <div className="relative z-10 w-full max-w-3xl mx-auto">
           {/* Compact Header */}
@@ -202,7 +202,7 @@ This is a license request submitted through the photography portfolio.`;
             <h2
               ref={contactHeadingAnimation.ref}
               style={contactHeadingAnimation.style}
-              className={`text-4xl md:text-6xl serif italic mb-4 ${
+              className={`text-3xl sm:text-4xl md:text-6xl serif italic mb-4 ${
                 theme === Theme.VIBRANT 
                   ? 'bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent leading-[1.12] pb-[2px]'
                   : 'text-white'
@@ -375,12 +375,12 @@ This is a license request submitted through the photography portfolio.`;
           </form>
 
           {/* Compact Direct Contact & Social Links */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-xs">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 text-xs text-center">
             <div className={`${theme === Theme.VIBRANT ? 'text-gray-500' : 'text-neutral-500'}`}>
               <span className="tracking-wider mr-2">OR</span>
               <a 
-                href="mailto:jaishukreddy7@gmail.com" 
-                className={`border-b pb-0.5 hover:pb-1 transition-all duration-300 tracking-wide ${
+                href="mailto:jaishukreddy7@gmail.com"
+                className={`border-b pb-0.5 hover:pb-1 transition-all duration-300 tracking-wide break-all ${
                   theme === Theme.VIBRANT ? 'border-black text-black' : 'border-white text-white'
                 }`}
               >

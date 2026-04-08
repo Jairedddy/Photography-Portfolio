@@ -1,7 +1,7 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Theme } from '../types';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Menu, X } from 'lucide-react';
 import { TextScramble } from './ui/text-scramble';
 import { smoothScroll } from '../utils/smoothScroll';
 
@@ -13,6 +13,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const isHome = location.pathname === '/';
   const sectionScrollConfig: Record<
@@ -24,6 +25,17 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
     footer: { duration: 1300, easing: 'easeOutExpo', offset: -40 },
   };
   
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileMenuOpen]);
+
   useEffect(() => {
     const handleScrollListener = () => {
       const scrollY = window.scrollY;
@@ -89,8 +101,8 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
           : 'none',
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <Link 
+      <div className="max-w-7xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between">
+        <Link
           to="/"
           className="flex items-center gap-3 group cursor-pointer"
           onClick={(event) => handleInPageNavigation(event, 'hero')}
@@ -100,7 +112,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
           </span>
         </Link>
 
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4 md:gap-8">
           <ul className="hidden md:flex items-center gap-8">
             <li className="relative group">
               <Link 
@@ -220,6 +232,69 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
             </span>
           </div>
 
+          {/* Hamburger — mobile only */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={`md:hidden p-2 rounded-full transition-all duration-300 active:scale-95 ${
+              theme === Theme.VIBRANT
+                ? 'bg-gray-100 text-black ring-1 ring-black/5'
+                : 'bg-neutral-800 text-white ring-1 ring-white/10'
+            }`}
+            aria-label="Toggle menu"
+          >
+            <div className="relative w-5 h-5">
+              <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 rotate-0' : 'opacity-0 rotate-90'}`}>
+                <X size={18} />
+              </div>
+              <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0 -rotate-90' : 'opacity-100 rotate-0'}`}>
+                <Menu size={18} />
+              </div>
+            </div>
+          </button>
+
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`md:hidden fixed inset-x-0 bottom-0 z-40 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+          isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        style={{ top: '65px' }}
+      >
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: theme === Theme.VIBRANT ? 'rgba(250,250,250,0.96)' : 'rgba(9,9,11,0.96)',
+          }}
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+        {/* Menu content */}
+        <div className={`relative z-10 flex flex-col items-center justify-center h-full gap-10 pb-20 transition-all duration-500 ${
+          isMobileMenuOpen ? 'translate-y-0' : '-translate-y-6'
+        }`}>
+          {([
+            { label: 'WORKS', to: '/', isWorks: true },
+            { label: 'ABOUT', to: '/about', isWorks: false },
+            { label: 'CONTACT', to: '/contact', isWorks: false },
+          ] as { label: string; to: string; isWorks: boolean }[]).map(({ label, to, isWorks }) => (
+            <Link
+              key={label}
+              to={to}
+              onClick={(e: MouseEvent) => {
+                if (isWorks) handleInPageNavigation(e, 'works');
+                setIsMobileMenuOpen(false);
+              }}
+              className={`text-3xl font-light serif tracking-[0.2em] transition-opacity duration-300 ${
+                theme === Theme.VIBRANT ? 'text-black' : 'text-white'
+              } ${location.pathname === to ? 'opacity-100' : 'opacity-50'}`}
+            >
+              {label}
+            </Link>
+          ))}
         </div>
       </div>
     </nav>

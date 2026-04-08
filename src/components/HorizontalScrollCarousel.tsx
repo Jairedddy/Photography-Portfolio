@@ -6,23 +6,23 @@ interface HorizontalScrollCarouselProps {
   theme: Theme;
 }
 
-// Stock portrait photos - square aspect ratio
+// Portfolio photos for the About page carousel
 const PORTRAIT_PHOTOS = [
-  { id: '1', url: 'https://picsum.photos/500/500?random=101', title: 'Portrait 1' },
-  { id: '2', url: 'https://picsum.photos/500/500?random=102', title: 'Portrait 2' },
-  { id: '3', url: 'https://picsum.photos/500/500?random=103', title: 'Portrait 3' },
-  { id: '4', url: 'https://picsum.photos/500/500?random=104', title: 'Portrait 4' },
-  { id: '5', url: 'https://picsum.photos/500/500?random=105', title: 'Portrait 5' },
-  { id: '6', url: 'https://picsum.photos/500/500?random=106', title: 'Portrait 6' },
-  { id: '7', url: 'https://picsum.photos/500/500?random=107', title: 'Portrait 7' },
-  { id: '8', url: 'https://picsum.photos/500/500?random=108', title: 'Portrait 8' },
-  { id: '9', url: 'https://picsum.photos/500/500?random=109', title: 'Portrait 9' },
-  { id: '10', url: 'https://picsum.photos/500/500?random=110', title: 'Portrait 10' },
-  { id: '11', url: 'https://picsum.photos/500/500?random=111', title: 'Portrait 11' },
-  { id: '12', url: 'https://picsum.photos/500/500?random=112', title: 'Portrait 12' },
-  { id: '13', url: 'https://picsum.photos/500/500?random=113', title: 'Portrait 13' },
-  { id: '14', url: 'https://picsum.photos/500/500?random=114', title: 'Portrait 14' },
-  { id: '15', url: 'https://picsum.photos/500/500?random=115', title: 'Portrait 15' },
+  { id: '1',  url: '/images/23.jpg', title: 'Photo 23' },
+  { id: '2',  url: '/images/24.jpg', title: 'Photo 24' },
+  { id: '3',  url: '/images/25.jpg', title: 'Photo 25' },
+  { id: '4',  url: '/images/26.jpg', title: 'Photo 26' },
+  { id: '5',  url: '/images/27.jpg', title: 'Photo 27' },
+  { id: '6',  url: '/images/28.jpg', title: 'Photo 28' },
+  { id: '7',  url: '/images/29.jpg', title: 'Photo 29' },
+  { id: '8',  url: '/images/30.jpg', title: 'Photo 30' },
+  { id: '9',  url: '/images/31.jpg', title: 'Photo 31' },
+  { id: '10', url: '/images/32.jpg', title: 'Photo 32' },
+  { id: '11', url: '/images/33.jpg', title: 'Photo 33' },
+  { id: '12', url: '/images/34.jpg', title: 'Photo 34' },
+  { id: '13', url: '/images/35.jpg', title: 'Photo 35' },
+  { id: '14', url: '/images/36.jpg', title: 'Photo 36' },
+  { id: '15', url: '/images/37.jpg', title: 'Photo 37' },
 ];
 
 const PHOTO_SPACING = 550; // Spacing between images (photos are 500px wide)
@@ -164,10 +164,10 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ the
     return (
       <section
         ref={sectionRef}
-        className="relative py-20 px-6"
+        className="relative py-10 px-4"
       >
         <div className="max-w-2xl mx-auto">
-          <div className="space-y-8">
+          <div className="space-y-5">
             {PORTRAIT_PHOTOS.map((photo, index) => (
               <motion.div
                 key={photo.id}
