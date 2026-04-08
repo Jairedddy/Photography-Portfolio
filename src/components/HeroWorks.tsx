@@ -156,15 +156,6 @@ const GalleryItem: React.FC<GalleryItemProps> = ({ photo, theme, parallaxSpeed }
               </p>
             )}
 
-            {/* Details */}
-            <div className="flex items-center gap-6 text-white/60 text-xs uppercase tracking-wider mb-4">
-              <span>ISO 400</span>
-              <span className="w-1 h-1 rounded-full bg-white/30"></span>
-              <span>35mm</span>
-              <span className="w-1 h-1 rounded-full bg-white/30"></span>
-              <span>f/2.8</span>
-            </div>
-
             {/* License Request Button */}
             <button
               onClick={(e) => {
