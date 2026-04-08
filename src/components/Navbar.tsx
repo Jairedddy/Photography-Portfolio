@@ -1,7 +1,7 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Theme } from '../types';
-import { Sun, Moon, Menu, X } from 'lucide-react';
+import { Lightbulb, LightbulbOff, Menu, X } from 'lucide-react';
 import { TextScramble } from './ui/text-scramble';
 import { smoothScroll } from '../utils/smoothScroll';
 
@@ -201,18 +201,18 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
               aria-label="Toggle Theme"
             >
               <div className="relative w-5 h-5">
-                  {/* Moon (Shows when Light, to switch to Dark) */}
+                  {/* LightbulbOff (Shows when Vibrant, to switch to Monochrome) */}
                   <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 transform ${
                       theme === Theme.VIBRANT ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-50'
                   }`}>
-                      <Moon size={18} className="fill-current opacity-80" />
+                      <LightbulbOff size={18} className="opacity-80" />
                   </div>
 
-                  {/* Sun (Shows when Dark, to switch to Light) */}
+                  {/* Lightbulb (Shows when Monochrome, to switch to Vibrant) */}
                   <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 transform ${
                       theme === Theme.MONOCHROME ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-50'
                   }`}>
-                      <Sun size={18} className="fill-current opacity-80" />
+                      <Lightbulb size={18} className="opacity-80" />
                   </div>
               </div>
             </button>
@@ -226,7 +226,7 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme }) => {
               px-3 py-1.5 text-[9px] font-bold tracking-[0.2em] uppercase
               ${theme === Theme.VIBRANT ? 'bg-black text-white' : 'bg-white text-black'}
             `}>
-              {theme === Theme.VIBRANT ? 'Monochrome Mode' : 'Vibrant Mode'}
+              {theme === Theme.VIBRANT ? 'Turn Off The Lights' : 'Turn On The Lights'}
               {/* Arrow */}
               <span className={`absolute bottom-full right-3 border-4 border-transparent ${theme === Theme.VIBRANT ? 'border-b-black' : 'border-b-white'}`}></span>
             </span>
