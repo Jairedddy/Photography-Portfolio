@@ -8,21 +8,20 @@ interface HorizontalScrollCarouselProps {
 
 // Portfolio photos for the About page carousel
 const PORTRAIT_PHOTOS = [
-  { id: '1',  url: '/images/23.jpg', title: 'Photo 23' },
-  { id: '2',  url: '/images/24.jpg', title: 'Photo 24' },
-  { id: '3',  url: '/images/25.jpg', title: 'Photo 25' },
-  { id: '4',  url: '/images/26.jpg', title: 'Photo 26' },
-  { id: '5',  url: '/images/27.jpg', title: 'Photo 27' },
-  { id: '6',  url: '/images/28.jpg', title: 'Photo 28' },
-  { id: '7',  url: '/images/29.jpg', title: 'Photo 29' },
-  { id: '8',  url: '/images/30.jpg', title: 'Photo 30' },
-  { id: '9',  url: '/images/31.jpg', title: 'Photo 31' },
-  { id: '10', url: '/images/32.jpg', title: 'Photo 32' },
-  { id: '11', url: '/images/33.jpg', title: 'Photo 33' },
-  { id: '12', url: '/images/34.jpg', title: 'Photo 34' },
-  { id: '13', url: '/images/35.jpg', title: 'Photo 35' },
-  { id: '14', url: '/images/36.jpg', title: 'Photo 36' },
-  { id: '15', url: '/images/37.jpg', title: 'Photo 37' },
+  { id: '1',  url: '/images/About/1.jpg',  title: 'Photo 1' },
+  { id: '2',  url: '/images/About/2.jpg',  title: 'Photo 2' },
+  { id: '3',  url: '/images/About/3.jpg',  title: 'Photo 3' },
+  { id: '4',  url: '/images/About/4.jpg',  title: 'Photo 4' },
+  { id: '5',  url: '/images/About/5.jpg',  title: 'Photo 5' },
+  { id: '6',  url: '/images/About/6.jpg',  title: 'Photo 6' },
+  { id: '7',  url: '/images/About/7.jpg',  title: 'Photo 7' },
+  { id: '8',  url: '/images/About/8.jpg',  title: 'Photo 8' },
+  { id: '9',  url: '/images/About/9.jpg',  title: 'Photo 9' },
+  { id: '10', url: '/images/About/10.jpg', title: 'Photo 10' },
+  { id: '11', url: '/images/About/11.jpg', title: 'Photo 11' },
+  { id: '12', url: '/images/About/12.jpg', title: 'Photo 12' },
+  { id: '13', url: '/images/About/13.jpg', title: 'Photo 13' },
+  { id: '14', url: '/images/About/14.jpg', title: 'Photo 14' },
 ];
 
 const PHOTO_SPACING = 550; // Spacing between images (photos are 500px wide)

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv 37.jpg 36.jpg)",
+      "Bash(mv 38.jpg 37.jpg)",
+      "Bash(mv 39.webp 38.webp)",
+      "Bash(mv 40.jpg 39.jpg)",
+      "Bash(mv 41.jpg 40.jpg)",
+      "Bash(mv \"20240727_164633~2.jpg\"        \"1.jpg\")",
+      "Bash(mv \"20241030_110721~2.jpg\"        \"2.jpg\")",
+      "Bash(mv \"20250214_185435~2.jpg\"        \"3.jpg\")",
+      "Bash(mv \"20250215_125510~2.jpg\"        \"4.jpg\")",
+      "Bash(mv \"20250222_165428 \\(1\\)~2.jpg\"   \"5.jpg\")"
+    ]
+  }
+}
